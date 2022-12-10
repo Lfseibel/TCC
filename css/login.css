@@ -1,0 +1,25 @@
+.login-header {
+  background-color: #001122;
+  color: #ffffff;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.h1-login {
+  text-transform: uppercase;
+  font-size: 5.2rem;
+}
+
+article {
+  background-color: #e6ebf1;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-section {
+  width: 20rem;
+}

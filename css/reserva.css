@@ -1,0 +1,22 @@
+.grid--2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  width: 50vw;
+}
+
+.button-form {
+  height: inherit;
+}
+
+#vezes {
+  font-size: 2.4rem;
+  height: 6rem;
+}
