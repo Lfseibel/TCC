@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Home page from booking sistem" />
+    <link rel="icon" href="../../img/logo.png" />
+    <link rel="apple-touch-icon" href="../../img/logo.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/general.css" />
+    <link rel="stylesheet" href="../../css/reserva.css" />
+    <script defer src="../../js/calendar.js"></script>
+    <title>Principal</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul class="main-header">
+          <li class="item-main">
+            <a href="/html/index.html"
+              ><img class="logo-main" src="../../img/logo.png" alt=""
+            /></a>
+          </li>
+          <li class="item-main">
+            <label>Calendario</label>
+            <ul class="item-display">
+              <a href="/html/calendario/adicionarCalendario.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/calendario/editarCalendario.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/calendario/removerCalendario.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Horario</label>
+            <ul class="item-display">
+              <a href="/html/horario/adicionarHorario.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/horario/editarHorario.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/horario/removerHorario.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Bloco</label>
+            <ul class="item-display">
+              <a href="/html/bloco/criarBloco.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/bloco/editarBloco.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/bloco/removerBloco.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Unidade</label>
+            <ul class="item-display">
+              <a href="/html/unidade/adicionarUnidade.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/unidade/editarUnidade.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/unidade/removerUnidade.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Usuario</label>
+            <ul class="item-display">
+              <a href="/html/usuario/adicionarUsuario.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/usuario/editarUsuario.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/usuario/removerUsuario.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Sala</label>
+            <ul class="item-display">
+              <a href="/html/sala/adicionarSala.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/sala/editarSala.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/sala/removerSala.html"
+                ><li class="display-item">Remover</li></a
+              >
+            </ul>
+          </li>
+          <li class="item-main">
+            <label>Reservas</label>
+            <ul class="item-display" id="reserva">
+              <a href="/html/reserva/adicionarReserva.html"
+                ><li class="display-item">Adicionar</li></a
+              >
+              <a href="/html/reserva/editarReserva.html"
+                ><li class="display-item">Editar</li></a
+              >
+              <a href="/html/reserva/apagarReserva.html"
+                ><li class="display-item">Remover</li></a
+              >
+              <a href="/html/reserva/validarReserva.html"
+                ><li class="display-item">Validar</li></a
+              >
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <section class="form-region" id="add-calendar">
+      <h2 class="h2-form margin-bot4">Editar Reserva</h2>
+      <form class="form grid--2 margin-bot12" action="">
+        <div class="flex">
+          <label for="sigla" class="label-form margin-bot1">Sigla</label>
+          <input
+            type="text"
+            class="input-form"
+            id="sigla"
+            placeholder="Ex: (MAT001)"
+          />
+        </div>
+        <div class="flex">
+          <label for="turma" class="label-form margin-bot1">Turma</label>
+          <input
+            type="text"
+            class="input-form"
+            id="turma"
+            placeholder="Ex: (Cálculo 1)"
+          />
+        </div>
+        <div class="flex">
+          <label for="descricao" class="label-form margin-bot1"
+            >Descricao</label
+          >
+          <textarea class="textarea-form" id="descricao"></textarea>
+        </div>
+        <div class="flex">
+          <label for="observacao" class="label-form margin-bot1"
+            >Observação</label
+          >
+          <textarea class="textarea-form" id="observacao"></textarea>
+        </div>
+        <div class="flex">
+          <label for="responsavel" class="label-form margin-bot1"
+            >Responsável</label
+          >
+          <input
+            type="text"
+            class="input-form"
+            id="responsavel"
+            placeholder="Ex: (Pessoa X)"
+          />
+        </div>
+        <div class="flex">
+          <label for="data" class="label-form margin-bot1">Data</label>
+          <input
+            type="date"
+            class="input-form"
+            id="data"
+            placeholder="Horario final"
+          />
+        </div>
+        <div class="flex">
+          <label for="horaIninial" class="label-form margin-bot1"
+            >Hora inicio</label
+          >
+          <input
+            type="time"
+            class="input-form"
+            id="horaIninial"
+            placeholder="Horario inicial"
+          />
+        </div>
+        <div class="flex">
+          <label for="horaFinal" class="label-form margin-bot1">Hora fim</label>
+          <input
+            type="time"
+            class="input-form"
+            id="horaFinal"
+            placeholder="Horario final"
+          />
+        </div>
+        <div class="flex">
+          <label for="bloco" class="label-form margin-bot1">Codigo Sala</label>
+          <select class="select-form" id="bloco">
+            <option value="B1101">B1101</option>
+            <option value="X1101">X1101</option>
+          </select>
+        </div>
+        <div class="flex">
+          <select class="select-form" id="vezes">
+            <option value="unica">Única</option>
+            <option value="semanal">Semanal</option>
+            <option value="quinzenal">Quinzenal</option>
+          </select>
+        </div>
+        <div class="flex">
+          <label for="dataFinal" class="label-form margin-bot1"
+            >Termina em</label
+          >
+          <input
+            type="date"
+            class="input-form"
+            id="dataFinal"
+            placeholder="Horario final"
+          />
+        </div>
+        <button class="button-form">Editar</button>
+      </form>
+    </section>
+  </body>
+</html>
