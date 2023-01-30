@@ -12,17 +12,24 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey = 'email';
+    public $incrementing = false;
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'type',
+        'unity_code'
     ];
 
+    
+
+    
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -33,12 +40,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function store($data)
+    {
+        $password = $data['password'];
+        $data['password'] = bcrypt($password);
+        $this->create($data);
+    }
+
+    
 }
