@@ -26,4 +26,10 @@ class Block extends Model
     {
         $this->create($data);
     }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'block_code', 'code'); 
+        #One to many, one block, but a lot of rooms
+    }
 }

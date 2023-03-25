@@ -19,8 +19,21 @@ class Unity extends Model
     ];
 
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'unity_code', 'code'); 
+        #One to many, one unity, but a lot of users
+    }
+
+    public function rooms()
+    {
+        return $this->belongsToMany(Rooms::class);
+    }
+
     public function store($data)
     {
         $this->create($data);
     }
+
+   
 }

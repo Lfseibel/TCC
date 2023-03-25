@@ -29,12 +29,6 @@ return new class extends Migration
             $table->foreign('user_email')->references('email')->on('users');
         });
 
-        Schema::create('reservation_date', function (Blueprint $table) {
-            $table->date('date');
-            $table->unsignedInteger('reservation_code');
-            $table->foreign('reservation_code')->references('code')->on('reservations');
-            $table->primary(['date','reservation_code']);
-        });
     }
 
     /**
@@ -44,7 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservation_date');
         Schema::dropIfExists('reservations');
     }
 };
