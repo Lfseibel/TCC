@@ -27,7 +27,6 @@ return new class extends Migration
             $table->foreign('room_code')->references('code')->on('rooms');
             $table->char('user_email', 50);
             $table->foreign('user_email')->references('email')->on('users');
-            $table->primary('code');
         });
 
         Schema::create('reservation_date', function (Blueprint $table) {
