@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reservationDate', function (Blueprint $table) {
             $table->date('date');
             $table->unsignedInteger('reservation_code');
-            $table->foreign('reservation_code')->references('code')->on('reservations');
+            $table->foreign('reservation_code')->references('code')->on('reservations')->onDelete('cascade')->onUpdate('cascade');
             $table->primary(['date','reservation_code']);
         });
     }

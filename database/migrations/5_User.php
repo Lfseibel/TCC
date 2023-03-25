@@ -18,7 +18,7 @@ return new class extends Migration
             $table->char('password', 60);
             $table->char('type', 20);
             $table->char('unity_code', 8)->nullable();
-            $table->foreign('unity_code')->references('code')->on('unities')->onDelete('set null');
+            $table->foreign('unity_code')->references('code')->on('unities')->onDelete('cascade')->onUpdate('cascade');
             $table->rememberToken();
             $table->primary('email');
         });

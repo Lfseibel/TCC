@@ -14,26 +14,43 @@
       <span class="mx-auto">Agendamento de Salas</span>
     </header>
     <article class="w-screen mt-28 flex items-center justify-center">
-      <section
+      <form
         class="bg-unifei-100 w-72 px-48 py-14 flex flex-col gap-5 items-center justify-center shadow"
+        action="{{ route('user.auth')}}"
+        method="POST"
       >
+      @csrf
         <p class="uppercase text-unifei-800 text-2xl font-bold">Login</p>
         <input
+          name="email"
           type="email"
           placeholder="Email institucional"
           class="w-fit bg-unifei-50 border border-unifei-500 focus:border-unifei-800 focus:ring-2 focus:ring-unifei-500 focus:ring-opacity-50 rounded px-3 py-3 text-lg text-gray-800 placeholder-unifei-200 focus:outline-none transition duration-200 ease-in-out"
         />
         <input
+          name="password"
           type="password"
           placeholder="Senha"
           class="w-fit bg-unifei-50 border border-unifei-500 focus:border-unifei-800 focus:ring-2 focus:ring-unifei-500 focus:ring-opacity-40 rounded px-3 py-3 text-lg text-gray-800 placeholder-unifei-200 focus:outline-none transition duration-200 ease-in-out"
         />
         <button
+          type="submit"
           class="w-fit text-xl bg-unifei-500 hover:bg-unifei-800 px-6 py-2 rounded text-unifei-50 shadow transition duration-200 ease-in-out"
         >
           Login
         </button>
-      </section>
+      </form>
+      @if ($mensagem = Session::get('error'))
+          <p>{{$mensagem}}</p>
+      @endif
+
+      @if ($errors->any())
+        @foreach ($errors->all() as $error)
+          <p>{{$error}}</p>
+        @endforeach
+        
+      @endif
     </article>
+
   </body>
 </html>

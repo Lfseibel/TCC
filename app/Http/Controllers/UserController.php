@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFormRequest;
+use App\Http\Requests\UserLoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -13,6 +15,27 @@ class UserController extends Controller
     public function __construct(User $user)
     {
         $this->model = $user;
+    }
+
+    public function auth(UserLoginRequest $request)
+    {
+        if(Auth::attempt($request->only('email', 'password')))
+        {
+            $request->session()->regenerate();
+            return redirect()->route('user.index');
+        }
+        else
+        {
+            return redirect()->back()->with('error','Email or password invalid');
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('user.login');
     }
 
     public function index(Request $request)

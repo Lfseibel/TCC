@@ -1,26 +1,26 @@
 <?php
 
-use App\Http\Controllers\{BlockController, CalendarController, ScheduleController, UnityController, UserController};
+use App\Http\Controllers\{BlockController, CalendarController, ReservationController, RoomController, ScheduleController, UnityController, UserController};
 use Illuminate\Support\Facades\Route;
 
 
 /* Reservation related routes */
 
-Route::get('/reservations', [ScheduleController::class, 'index'])->name('reservation.index');
-Route::delete('/reservation/{code}', [ScheduleController::class, 'destroy'])->name('reservation.destroy');
-Route::put('/reservation/{code}', [ScheduleController::class, 'update'])->name('reservation.update');
-Route::get('/reservation/{code}/edit', [ScheduleController::class, 'edit'])->name('reservation.edit');
-Route::get('/reservation/create', [ScheduleController::class, 'create'])->name('reservation.create');
-Route::post('/reservation', [ScheduleController::class, 'store'])->name('reservation.store');
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservation.index');
+Route::delete('/reservation/{code}', [ReservationController::class, 'destroy'])->name('reservation.destroy');
+Route::put('/reservation/{code}', [ReservationController::class, 'update'])->name('reservation.update');
+Route::get('/reservation/{code}/edit', [ReservationController::class, 'edit'])->name('reservation.edit');
+Route::get('/reservation/create', [ReservationController::class, 'create'])->name('reservation.create');
+Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
 
 /* Room related routes */
 
-Route::get('/rooms', [ScheduleController::class, 'index'])->name('room.index');
-Route::delete('/room/{code}', [ScheduleController::class, 'destroy'])->name('room.destroy');
-Route::put('/room/{code}', [ScheduleController::class, 'update'])->name('room.update');
-Route::get('/room/{code}/edit', [ScheduleController::class, 'edit'])->name('room.edit');
-Route::get('/room/create', [ScheduleController::class, 'create'])->name('room.create');
-Route::post('/room', [ScheduleController::class, 'store'])->name('room.store');
+Route::get('/rooms', [RoomController::class, 'index'])->name('room.index');
+Route::delete('/room/{code}', [RoomController::class, 'destroy'])->name('room.destroy');
+Route::put('/room/{code}', [RoomController::class, 'update'])->name('room.update');
+Route::get('/room/{code}/edit', [RoomController::class, 'edit'])->name('room.edit');
+Route::get('/room/create', [RoomController::class, 'create'])->name('room.create');
+Route::post('/room', [RoomController::class, 'store'])->name('room.store');
 
 /* Schedule related routes */
 
@@ -59,7 +59,12 @@ Route::get('/unity/create', [UnityController::class, 'create'])->name('unity.cre
 Route::post('/unity', [UnityController::class, 'store'])->name('unity.store');
 
 /* User related routes */
-Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::middleware('auth')->group(function(){
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
+});
+
+Route::post('/auth', [UserController::class, 'auth'])->name('user.auth');
 Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::put('/user/{email}', [UserController::class, 'update'])->name('user.update');
 Route::get('/user/{email}/edit', [UserController::class, 'edit'])->name('user.edit');
@@ -68,4 +73,4 @@ Route::post('/user', [UserController::class, 'store'])->name('user.store');
 
 Route::get('/', function () {
     return view('login');
-});
+})->name('user.login');

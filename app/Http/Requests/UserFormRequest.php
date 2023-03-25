@@ -13,7 +13,15 @@ class UserFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        if(auth()->user()->type === 'admin')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 
     /**

@@ -24,9 +24,9 @@ return new class extends Migration
             $table->time('startTime');
             $table->time('endTime');
             $table->char('room_code', 10);
-            $table->foreign('room_code')->references('code')->on('rooms');
+            $table->foreign('room_code')->references('code')->on('rooms')->onDelete('cascade')->onUpdate('cascade');
             $table->char('user_email', 50);
-            $table->foreign('user_email')->references('email')->on('users');
+            $table->foreign('user_email')->references('email')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
 
     }

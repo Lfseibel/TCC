@@ -18,15 +18,15 @@ return new class extends Migration
             $table->integer('capacity');
             $table->integer('reduced_capacity');
             $table->char('block_code', 8);
-            $table->foreign('block_code')->references('code')->on('blocks');
+            $table->foreign('block_code')->references('code')->on('blocks')->onDelete('cascade')->onUpdate('cascade');
             $table->primary('code');
         });
 
         Schema::create('room_unity', function (Blueprint $table){
             $table->char('room_code', 10);
-            $table->foreign('room_code')->references('code')->on('rooms');
+            $table->foreign('room_code')->references('code')->on('rooms')->onDelete('set null')->onUpdate('cascade');
             $table->char('unity_code', 8);
-            $table->foreign('unity_code')->references('code')->on('unities');
+            $table->foreign('unity_code')->references('code')->on('unities')->onDelete('set null')->onUpdate('cascade');
             $table->primary(['room_code', 'unity_code']);
            });
     }
