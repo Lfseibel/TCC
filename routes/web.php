@@ -74,3 +74,7 @@ Route::post('/user', [UserController::class, 'store'])->name('user.store');
 Route::get('/', function () {
     return view('login');
 })->name('user.login');
+
+Route::get('/index', function () {
+    return view('login');
+})->name('index');

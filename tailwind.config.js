@@ -16,9 +16,15 @@ module.exports = {
             },
         },
     },
+    variants: {
+        extend: {
+            textColor: ["hover"],
+            backgroundColor: ["hover"],
+        },
+    },
     plugins: [],
 };
-// ./tailwindcss -i ./tailwind.css -o ./src/css/styles.css --watch
+// ./tailwindcss -i ./static.css -o ./public/css/output.css --watch
 // - Primary: #003a70
 // - Tints:
 // #e6ebf1
@@ -27,3 +33,9 @@ module.exports = {
 // - Shades:
 // #003465
 // #001122
+// 50: "230,235,241",
+//                     100: "204,216,226",
+//                     200: "51,97,141",
+//                     500: "0, 58, 112",
+//                     600: "0,52,101",
+//                     800: "0, 17, 34",
