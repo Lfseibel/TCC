@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Unidades')
+@section('title', 'Horarios')
 
 @section('content')
+
+
 {{auth()->user()->email}}
 <article class="flex items-center justify-center flex-col mt-8">
   <div class="flex mb-8">
-    <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Unidades:</h1>
-    <a href="{{ route('block.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Unidade</a>
+    <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Horarios:</h1>
+    <a href="{{ route('block.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Horario</a>
   </div>
   <div class="flex flex-col">
   
@@ -23,9 +25,13 @@
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Nome
+            Hora início
           </th>
-
+          <th
+            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+          >
+            Hora fim
+          </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
@@ -40,24 +46,28 @@
         </tr>
       </thead>
       <tbody>
-    @foreach ($unities as $unity)
+    @foreach ($schedules as $schedule)
         <tr>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               
-              {{ $unity->code }}
+              {{ $schedule->code }}
                 
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               
-              {{ $unity->name }}
+              {{ $schedule->startTime }}
                 
             </td>
-            
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <a href="{{ route('unity.edit', $unity->code) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
+              
+              {{ $schedule->endTime }}
+                
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form action="{{ route('unity.destroy', $unity->code) }}" method="POST">
+                <a href="{{ route('schedule.edit', $schedule->code) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
+            </td>
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <form action="{{ route('schedule.destroy', $schedule->code) }}" method="POST">
                 @method('DELETE')
                 @csrf
                 <button type="submit" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>

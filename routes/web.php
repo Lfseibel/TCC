@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservation.index');
 Route::delete('/reservation/{code}', [ReservationController::class, 'destroy'])->name('reservation.destroy');
 Route::put('/reservation/{code}', [ReservationController::class, 'update'])->name('reservation.update');
+Route::get('/reservation/{code}/see', [ReservationController::class, 'edit'])->name('reservation.see');
 Route::get('/reservation/{code}/edit', [ReservationController::class, 'edit'])->name('reservation.edit');
 Route::get('/reservation/create', [ReservationController::class, 'create'])->name('reservation.create');
 Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
@@ -58,23 +59,28 @@ Route::get('/unity/{code}/edit', [UnityController::class, 'edit'])->name('unity.
 Route::get('/unity/create', [UnityController::class, 'create'])->name('unity.create');
 Route::post('/unity', [UnityController::class, 'store'])->name('unity.store');
 
-/* User related routes */
+
 Route::middleware('auth')->group(function(){
+    /* User related routes */
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
+    
+    Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/user/{email}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/user/{email}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+
+
+    Route::get('/index', function () {
+        return view('index');
+    })->name('index');
 });
 
-Route::post('/auth', [UserController::class, 'auth'])->name('user.auth');
-Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('user.destroy');
-Route::put('/user/{email}', [UserController::class, 'update'])->name('user.update');
-Route::get('/user/{email}/edit', [UserController::class, 'edit'])->name('user.edit');
-Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-Route::post('/user', [UserController::class, 'store'])->name('user.store');
 
+Route::post('/auth', [UserController::class, 'auth'])->name('user.auth');
 Route::get('/', function () {
     return view('login');
 })->name('user.login');
 
-Route::get('/index', function () {
-    return view('login');
-})->name('index');
+

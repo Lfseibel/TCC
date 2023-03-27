@@ -6,10 +6,10 @@
 
 
 {{auth()->user()->email}}
-<article class="flex items-center justify-center flex-col">
+<article class="flex items-center justify-center flex-col mt-8">
 <div class="flex mb-8">
-  <h1 class="text-2xl font-semibold leading-tigh py-2 mr-48">Usuarios:</h1>
-  <a href="{{ route('user.create') }}" class=" bg-green-200 rounded-full py-2 px-6">Adicionar Usuario</a>
+  <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Usuarios:</h1>
+  <a href="{{ route('user.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Usuario</a>
 </div>
 <div class="flex flex-col">
 

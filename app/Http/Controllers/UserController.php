@@ -23,7 +23,7 @@ class UserController extends Controller
         if(Auth::attempt($request->only('email', 'password')))
         {
             $request->session()->regenerate();
-            return redirect()->route('user.index');
+            return redirect()->route('index');
         }
         else
         {
