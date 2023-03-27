@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFormRequest;
 use App\Http\Requests\UserLoginRequest;
+use App\Models\Unity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user.create');
+        $unities = Unity::get(['code']);
+        return view('user.create', compact('unities'));
     } 
 
     public function store(UserFormRequest $request)
