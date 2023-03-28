@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->increments('code');
+            $table->id('code');
             $table->char('acronym', 12);
             $table->char('class', 6);
             $table->char('description', 60);

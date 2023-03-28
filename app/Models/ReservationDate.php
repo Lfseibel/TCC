@@ -16,14 +16,20 @@ class ReservationDate extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'date',
-        'reservation_code'
-    ];
+    protected $fillable = ['date', 'reservation_code'];
+    
+    protected $dates = ['date'];
+    
+    protected $casts = ['reservation_code' => 'unsignedInteger',];
 
     public function reservation()
     {
         return $this->belongsTo(Reservation::class, 'reservation_code', 'code'); 
         #Many to one, one reservation but a lot of dates
+    }
+
+    public function store($data)
+    {
+        return $this->create($data);
     }
 }

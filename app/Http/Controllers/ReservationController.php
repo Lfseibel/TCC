@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReservationFormRequest;
 use App\Models\Reservation;
+use App\Models\ReservationDate;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservationController extends Controller
 {
     protected $model;
+    protected $resDate;
 
-    public function __construct(Reservation $reservation)
+    public function __construct(Reservation $reservation, ReservationDate $resDate)
     {
         $this->model = $reservation;
+        $this->resDate = $resDate;
     }
 
     public function index(Request $request)
@@ -40,6 +44,14 @@ class ReservationController extends Controller
     {
         $data = $request->merge(['user_email' => auth()->user()->email])->all();
         $reservation_code = $this->model->store($data);
+
+        $date = \Illuminate\Support\Carbon::today();
+        $newData['date'] = '2023-02-02';
+        $newData['code'] = $reservation_code->code;
+        dd($newData);
+        $this->resDate->store($newData);
+        
+        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
 
         // $startDate = Carbon::parse($request->start_date);
         // $endDate = Carbon::parse($request->end_date);

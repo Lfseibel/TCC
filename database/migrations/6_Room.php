@@ -24,9 +24,9 @@ return new class extends Migration
 
         Schema::create('room_unity', function (Blueprint $table){
             $table->char('room_code', 10);
-            $table->foreign('room_code')->references('code')->on('rooms')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('room_code')->references('code')->on('rooms')->onDelete('cascade')->onUpdate('cascade');
             $table->char('unity_code', 8);
-            $table->foreign('unity_code')->references('code')->on('unities')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('unity_code')->references('code')->on('unities')->onDelete('cascade')->onUpdate('cascade');
             $table->primary(['room_code', 'unity_code']);
            });
     }

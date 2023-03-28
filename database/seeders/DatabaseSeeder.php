@@ -52,32 +52,5 @@ class DatabaseSeeder extends Seeder
             'endTime' => '07:55'
         ]);
 
-        Reservation::create([
-            'acronym' => 'DB',
-            'class' => '01',
-            'description' => 'Course of Databases',
-            'observation' => 'Course',
-            'responsible' => 'Olmes',
-            'startTime' => '07:00',
-            'endTime' => '07:55',
-            'room_code' => 'B1004',
-            'user_email' => 'lfseibel@live.com'
-        ]);
-
-        DB::table('reservationDate')->insert([
-            [
-                'date' => '2023-05-01',
-                'reservation_code' => 1,
-            ],
-            [
-                'date' => '2023-05-02',
-                'reservation_code' => 1,
-            ],
-            [
-                'date' => '2023-05-03',
-                'reservation_code' => 1,
-            ]
-        ]);
-
     }
 }
