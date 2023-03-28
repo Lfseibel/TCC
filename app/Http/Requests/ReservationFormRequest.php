@@ -29,8 +29,8 @@ class ReservationFormRequest extends FormRequest
             'description' => ['required', 'min:1', 'max:60'],
             'observation' => ['required', 'min:1', 'max:120'],
             'responsible' => ['required', 'min:1', 'max:120'],
-            'startTime' => ['required', 'time'],
-            'endTime' => ['required', 'time'],
+            'startTime' => ['required'],
+            'endTime' => ['required'],
             'room_code' => ['required', 'min:1', 'max:10', 'exists:rooms,code']
         ];
 

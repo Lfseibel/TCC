@@ -13,7 +13,7 @@
     >
       <span class="mx-auto">Agendamento de Salas</span>
     </header>
-    <article class="w-screen mt-28 flex items-center justify-center">
+    <article class="w-screen mt-28 flex items-center justify-center flex-col">
       <form
         class="bg-unifei-100 w-72 px-48 py-14 flex flex-col gap-5 items-center justify-center shadow"
         action="{{ route('user.auth')}}"
@@ -40,16 +40,8 @@
           Login
         </button>
       </form>
-      @if ($mensagem = Session::get('error'))
-          <p>{{$mensagem}}</p>
-      @endif
 
-      @if ($errors->any())
-        @foreach ($errors->all() as $error)
-          <p>{{$error}}</p>
-        @endforeach
-        
-      @endif
+      @include('includes.validation-form')
     </article>
 
   </body>

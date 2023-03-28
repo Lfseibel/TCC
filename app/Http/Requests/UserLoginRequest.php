@@ -23,7 +23,17 @@ class UserLoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email'],
-            'password' => ['required']
+            'password' => ['required'],
+            
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'email.required' => 'Preencha o email',
+        'email.email' => 'Email inválido',
+        'password.required' => 'Preencha a senha',
+    ];
+}
 }

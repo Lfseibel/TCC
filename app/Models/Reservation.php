@@ -45,4 +45,9 @@ class Reservation extends Model
         return $this->hasMany(ReservationDate::class, 'reservation_code', 'code'); 
         #One to many, one reservation but a lot of dates
     }
+
+    public function store($data)
+    {
+        return $this->create($data);
+    }
 }
