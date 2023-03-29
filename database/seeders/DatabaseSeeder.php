@@ -28,7 +28,21 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Room::create([
-            'code' => 'B1004',
+            'code' => 'C1004',
+            'capacity' => 50,
+            'reduced_capacity' => 25,
+            'block_code' => 'C'
+        ]);
+
+        Room::create([
+            'code' => 'C1005',
+            'capacity' => 50,
+            'reduced_capacity' => 25,
+            'block_code' => 'C'
+        ]);
+
+        Room::create([
+            'code' => 'C1006',
             'capacity' => 50,
             'reduced_capacity' => 25,
             'block_code' => 'C'
@@ -40,16 +54,47 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'email' => 'lfseibel@live.com',
+            'email' => 'admin@admin.com',
             'password' => bcrypt('1234'),
             'type' => 'admin',
             'unity_code' => 'MI'
         ]);
 
+        User::create([
+            'email' => 'professor@professor.com',
+            'password' => bcrypt('1234'),
+            'type' => 'professor',
+            'unity_code' => 'MI'
+        ]);
+
         Schedule::create([
-            'code' => 'N1',
+            'code' => 'M1',
             'startTime' => '07:00',
             'endTime' => '07:55'
+        ]);
+
+        Schedule::create([
+            'code' => 'M2',
+            'startTime' => '07:56',
+            'endTime' => '08:50'
+        ]);
+
+        Schedule::create([
+            'code' => 'M3',
+            'startTime' => '08:51',
+            'endTime' => '9:45'
+        ]);
+
+        Schedule::create([
+            'code' => 'M4',
+            'startTime' => '10:10',
+            'endTime' => '11:05'
+        ]);
+
+        Schedule::create([
+            'code' => 'M5',
+            'startTime' => '11:06',
+            'endTime' => '12:00'
         ]);
 
     }

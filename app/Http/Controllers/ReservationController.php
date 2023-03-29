@@ -46,10 +46,10 @@ class ReservationController extends Controller
         $reservation_code = $this->model->store($data);
 
         $date = \Illuminate\Support\Carbon::today();
-        $newData['date'] = '2023-02-02';
-        $newData['code'] = $reservation_code->code;
-        dd($newData);
-        $this->resDate->store($newData);
+        // $newData['date'] = '2023-02-02';
+        // $newData['code'] = $reservation_code->code;
+        // dd($newData);
+        // $this->resDate->store($newData);
         
         DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
 
@@ -76,17 +76,20 @@ class ReservationController extends Controller
         {
             return redirect()->route('reservation.index');
         }
+        $data['status'] = 1;
+
+        $reservation->update($data);
         return view('reservation.edit', compact('reservation'));
     }
 
-    public function update(reservationFormRequest $request, $code)
+    public function update(ReservationFormRequest $request, $code)
     {
         if(!$reservation = $this->model->find($code))
         {
             return redirect()->route('reservation.index');
         }
-        $data = $request->only('name');
-
+        
+        $data['status'] = 1;
 
         $reservation->update($data);
 

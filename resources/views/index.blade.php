@@ -23,17 +23,15 @@
   </tbody>
  
   <tbody>
-    @foreach ($rooms as $room)
-    <td>{{$room->code}}</td>
-    <td>{{$room->reservations}}</td>
+    @foreach ($results as $roomCode => $schedules)
+      <tr>
+                <td>{{ $roomCode }}</td>
+                @foreach ($schedules as $reserved)
+                    <td>{!! $reserved ? 'Reservado' : '<a href="http://example.com">Link</a>' !!}</td>
+                @endforeach
+      </tr>
     @endforeach
     
-    <td>Reservado</td>
-    <td>aaa</td>
-    <td>aaa</td>
-    <td>aaa</td>
-    <td>aaa</td>
-    <td>aaa</td>
   </tbody>
     
 @endsection

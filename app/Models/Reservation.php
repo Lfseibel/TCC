@@ -25,7 +25,8 @@ class Reservation extends Model
         'startTime',
         'endTime',
         'room_code',
-        'user_email'
+        'user_email',
+        'status'
     ];
 
     public function room()

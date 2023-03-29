@@ -30,7 +30,7 @@ class IndexController extends Controller
                 $endTime = $schedule->endTime;
             
                 $reservations = Reservation::where('room_code', $roomCode)
-                                            ->where('status', 0)
+                                            ->where('status', 1)
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
@@ -46,9 +46,7 @@ class IndexController extends Controller
             $results[$roomCode] = $reserved;
         }
 
-        dd($results);
-
-        return view('index', compact(['schedulesCode'],['schedulesTimes'],['result']));
+        return view('index', compact(['schedulesCode'],['schedulesTimes'],['results']));
 
 
         
