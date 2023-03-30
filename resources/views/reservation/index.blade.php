@@ -86,7 +86,11 @@
               <a href="{{ route('reservation.see', $reservation->code) }}" class="bg-green-200 rounded-full py-2 px-6">Ver</a>
           </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <a href="{{ route('reservation.edit', $reservation->code) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
+              <form action="{{ route('reservation.update', $reservation->code) }}" method="POST">
+                @method('PUT')
+                @csrf
+                <button type="submit" class="rounded-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4">Verificar</button>
+              </form>
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <form action="{{ route('reservation.destroy', $reservation->code) }}" method="POST">

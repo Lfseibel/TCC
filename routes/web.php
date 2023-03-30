@@ -12,7 +12,7 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservation.index');
     Route::delete('/reservation/{code}', [ReservationController::class, 'destroy'])->name('reservation.destroy');
-    Route::put('/reservation/{code}', [ReservationController::class, 'update'])->name('reservation.update');
+    Route::match(['put', 'patch'], '/reservation/{code}', [ReservationController::class, 'update'])->name('reservation.update');
     Route::get('/reservation/{code}/see', [ReservationController::class, 'edit'])->name('reservation.see');
     Route::get('/reservation/{code}/edit', [ReservationController::class, 'edit'])->name('reservation.edit');
     Route::get('/reservation/create', [ReservationController::class, 'create'])->name('reservation.create');

@@ -82,7 +82,7 @@ class ReservationController extends Controller
         return view('reservation.edit', compact('reservation'));
     }
 
-    public function update(ReservationFormRequest $request, $code)
+    public function update($code)
     {
         if(!$reservation = $this->model->find($code))
         {

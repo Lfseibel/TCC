@@ -24,10 +24,11 @@ class IndexController extends Controller
 
         foreach ($rooms as $room) {
             $roomCode = $room->code;
-            $schedules = Schedule::all();
+            $schedules = Schedule::orderBy('startTime', 'asc')->get();
 
             $reserved = [];
-            foreach ($schedules as $schedule) {
+            foreach ($schedules as $schedule) 
+            {
                 $startTime = $schedule->startTime;
                 $endTime = $schedule->endTime;
             
@@ -36,11 +37,10 @@ class IndexController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                          $query->whereBetween('startTime', [$startTime, $endTime])
-                                                                ->orWhereBetween('endTime', [$startTime, $endTime]);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
-                                            ->orderBy('startTime', 'asc')
                                             ->exists();
                                         
                 $reserved[] = $reservations;
