@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoomFormRequest;
+use App\Models\Block;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,8 @@ class RoomController extends Controller
 
     public function create()
     {
-        return view('room.create');
+        $blocks = Block::get(['code']);
+        return view('room.create', compact('blocks'));
     } 
 
     public function store(RoomFormRequest $request)

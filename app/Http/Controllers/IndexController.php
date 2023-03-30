@@ -11,8 +11,10 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $schedulesCode = Schedule::get(['code']);
-        $schedulesTimes = Schedule::get(['startTime', 'endTime']);
+        $schedulesCode = Schedule::orderBy('startTime')->pluck('code');
+        $schedulesTimes = Schedule::selectRaw("DATE_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(endTime, '%H:%i') as endTime")
+    ->orderBy('startTime', 'asc')
+    ->get();
 
         $date = \Illuminate\Support\Carbon::today();
 
@@ -38,6 +40,7 @@ class IndexController extends Controller
                                                                 ->orWhereBetween('endTime', [$startTime, $endTime]);
                                                       });
                                             })
+                                            ->orderBy('startTime', 'asc')
                                             ->exists();
                                         
                 $reserved[] = $reservations;

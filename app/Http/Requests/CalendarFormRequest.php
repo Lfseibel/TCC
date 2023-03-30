@@ -24,8 +24,8 @@ class CalendarFormRequest extends FormRequest
     public function rules()
     {
         $rules =[
-            'year' => ['required', 'integer',"unique:calendars"], 
-            'period' => ['required', 'integer', "unique:calendars"],
+            'year' => ['required', 'integer'], 
+            'period' => ['required', 'integer'],
             'limitDate' => ['required', 'date'],
         ];
 

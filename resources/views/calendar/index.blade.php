@@ -9,7 +9,7 @@
 <article class="flex items-center justify-center flex-col mt-8">
   <div class="flex mb-8">
     <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Calendarios:</h1>
-    <a href="{{ route('block.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Calendario</a>
+    <a href="{{ route('calendar.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Calendario</a>
   </div>
   <div class="flex flex-col">
   

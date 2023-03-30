@@ -22,4 +22,9 @@ class Schedule extends Model
         'startTime',
         'endTime',
     ];
+
+    public function store($data)
+    {
+        $this->create($data);
+    }
 }

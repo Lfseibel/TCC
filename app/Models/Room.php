@@ -40,4 +40,9 @@ class Room extends Model
         return $this->belongsToMany(Unity::class);
         #Many to many, many rooms and many unities
     }
+
+    public function store($data)
+    {
+        return $this->create($data);
+    }
 }

@@ -25,8 +25,8 @@ class ScheduleFormRequest extends FormRequest
     {
         $rules =[
             'code' => ['required', 'min:1','max:8',"unique:schedules"], 
-            'startTime' => ['required', 'time'],
-            'endTime' => ['required', 'time'],
+            'startTime' => ['required'],
+            'endTime' => ['required'],
         ];
 
         return $rules;

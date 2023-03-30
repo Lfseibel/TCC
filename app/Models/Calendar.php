@@ -22,4 +22,9 @@ class Calendar extends Model
         'period',
         'limitDate',
     ];
+
+    public function store($data)
+    {
+        $this->create($data);
+    }
 }

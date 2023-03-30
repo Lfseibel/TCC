@@ -97,5 +97,64 @@ class DatabaseSeeder extends Seeder
             'endTime' => '12:00'
         ]);
 
+        Schedule::create([
+            'code' => 'T1',
+            'startTime' => '13:30',
+            'endTime' => '14:25'
+        ]);
+
+        Schedule::create([
+            'code' => 'T2',
+            'startTime' => '14:26',
+            'endTime' => '15:20'
+        ]);
+
+        Schedule::create([
+            'code' => 'T3',
+            'startTime' => '15:45',
+            'endTime' => '16:40'
+        ]);
+
+        Schedule::create([
+            'code' => 'T4',
+            'startTime' => '16:41',
+            'endTime' => '17:35'
+        ]);
+
+        Schedule::create([
+            'code' => 'T5',
+            'startTime' => '17:36',
+            'endTime' => '18:30'
+        ]);
+
+        Schedule::create([
+            'code' => 'N1',
+            'startTime' => '19:00',
+            'endTime' => '19:50'
+        ]);
+
+        Schedule::create([
+            'code' => 'N2',
+            'startTime' => '19:51',
+            'endTime' => '20:40'
+        ]);
+
+        Schedule::create([
+            'code' => 'N3',
+            'startTime' => '21:00',
+            'endTime' => '21:50'
+        ]);
+
+        Schedule::create([
+            'code' => 'N4',
+            'startTime' => '21:51',
+            'endTime' => '22:40'
+        ]);
+
+        Schedule::create([
+            'code' => 'N5',
+            'startTime' => '22:41',
+            'endTime' => '23:30'
+        ]);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CalendarFormRequest;
 use App\Models\Calendar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PDOException;
 
 class CalendarController extends Controller
 {
@@ -28,30 +30,40 @@ class CalendarController extends Controller
 
     public function store(CalendarFormRequest $request)
     {
-        $this->model->store($request->all());
+        try {
+            $this->model->store($request->all());
+        } catch (PDOException $exception) {
+            // Handle the database error
+            if ($exception->errorInfo[1] == 1062) {
+                // Handle duplicate key error
+                $errors = new \Illuminate\Support\MessageBag(['Calendario já registrado no banco']);
+                return redirect()->back()->with('errors', $errors)->withInput();
+                // Modify the query and retry
+            }
+        }
+        
 
         return redirect()->route('calendar.index');
     }
 
-    public function edit($code)
+    public function edit($year, $period)
     {
-        if(!$calendar = $this->model->find($code))
+        if(!$calendar = $this->model->where('year', '=', "{$year}")->where('period', '=', "{$period}")->first())
         {
             return redirect()->route('calendar.index');
         }
         return view('calendar.edit', compact('calendar'));
     }
 
-    public function update(CalendarFormRequest $request, $code)
+    public function update(CalendarFormRequest $request, $year, $period)
     {
-        if(!$calendar = $this->model->find($code))
+        if(!$calendar = $this->model->where('year', '=', "{$year}")->where('period', '=', "{$period}")->first())
         {
             return redirect()->route('calendar.index');
         }
-        $data = $request->only('name');
+        $data = $request->only('year', 'period', 'limitDate');
 
-
-        $calendar->update($data);
+        DB::table('calendars')->where('year', $year)->where('period', $period)->update($data);
 
         return redirect()->route('calendar.index');
     }

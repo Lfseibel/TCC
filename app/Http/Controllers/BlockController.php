@@ -44,11 +44,12 @@ class BlockController extends Controller
 
     public function update(BlockFormRequest $request, $code)
     {
+       
         if(!$block = $this->model->find($code))
         {
             return redirect()->route('block.index');
         }
-        $data = $request->only('name');
+        $data = $request->only('code');
 
 
         $block->update($data);
