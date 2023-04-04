@@ -33,7 +33,7 @@
     <nav>
       <ul class="flex justify-around py-8 text-2xl uppercase items-center"> 
         <li><a href="{{route('index')}}"><img src="{{asset("logo_unifei.png")}}" class="relative h-16"></a></li>
-        @if (auth()->user()->type === 'admin')
+        @if (auth()->user()->type === 'Admin')
           <li><a href="{{route('block.index')}}">Blocos</a></li>
           <li><a href="{{route('calendar.index')}}">Calendario</a></li>
           <li><a href="{{route('user.index')}}">Usuarios</a></li>
@@ -41,7 +41,7 @@
           <li><a href="{{route('schedule.index')}}">Horarios</a></li>
           <li><a href="{{route('room.index')}}">Salas</a></li>
           <li><a href="{{route('reservation.index')}}">Reservas</a></li>
-        @elseif (auth()->user()->type === 'professor')
+        @elseif (auth()->user()->type === 'Direcao' or auth()->user()->type === 'Comum')
           <li><a href="{{route('reservation.index')}}">Reservas</a></li>
         @endif
         <li><a href="{{ route('user.logout')}}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="50px" height="50px">
