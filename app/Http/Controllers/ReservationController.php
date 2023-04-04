@@ -49,10 +49,13 @@ class ReservationController extends Controller
 
     public function store(ReservationFormRequest $request)
     {
+        dd(Carbon::parse('Sunday')->dayOfWeek);
         $data = $request->merge(['user_email' => auth()->user()->email])->all();
+        $today = \Illuminate\Support\Carbon::today();
         $reservation_code = $this->model->store($data);
 
-        $today = \Illuminate\Support\Carbon::today();
+        
+        
         // $newData['date'] = '2023-02-02';
         // $newData['code'] = $reservation_code->code;
         // dd($newData);
