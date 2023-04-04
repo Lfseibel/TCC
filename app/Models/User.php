@@ -12,15 +12,19 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey = 'email';
+    public $incrementing = false;
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'type',
+        'unity_code'
     ];
 
     /**
@@ -33,12 +37,24 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function unity()
+    {
+        return $this->belongsTo(Unity::class, 'unity_code', 'code'); 
+        #Many to one, a lot of users, but one unity
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'user_email', 'email'); 
+        #One to many, one user, but a lot of reservations
+    }
+
+    public function store($data)
+    {
+        $password = $data['password'];
+        $data['password'] = bcrypt($password);
+        $this->create($data);
+    }
+
+    
 }
