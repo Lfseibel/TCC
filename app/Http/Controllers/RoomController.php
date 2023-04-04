@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoomFormRequest;
 use App\Models\Block;
 use App\Models\Room;
+use App\Models\Unity;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -25,12 +26,17 @@ class RoomController extends Controller
     public function create()
     {
         $blocks = Block::get(['code']);
-        return view('room.create', compact('blocks'));
+        $unities = Unity::get(['code']);
+        return view('room.create', compact(['blocks', 'unities']));
     } 
 
     public function store(RoomFormRequest $request)
     {
-        $this->model->store($request->all());
+        $room = $this->model->store($request->all());
+
+        $unities = $request->input('unities');
+        $room->unities()->attach($unities);
+
 
         return redirect()->route('room.index');
     }
@@ -41,7 +47,9 @@ class RoomController extends Controller
         {
             return redirect()->route('room.index');
         }
-        return view('room.edit', compact('room'));
+        $blocks = Block::get(['code']);
+        $unities = Unity::get(['code']);
+        return view('room.edit', compact(['room', 'blocks', 'unities']));
     }
 
     public function update(roomFormRequest $request, $code)
@@ -50,10 +58,10 @@ class RoomController extends Controller
         {
             return redirect()->route('room.index');
         }
-        $data = $request->only('name');
 
-
-        $room->update($data);
+        $room->update($request->all());
+        $unities = $request->input('unities');
+        $room->unities()->syncWithoutDetaching($unities);
 
         return redirect()->route('room.index');
     }

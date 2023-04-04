@@ -3,8 +3,10 @@
   @csrf
   <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="type">
  
-    <option value="admin" selected>admin </option>
-    <option value="professor" selected>professor </option>
+    <option value="Admin" selected> Admin </option>
+    <option value="Direcao" selected> Direcao </option>
+    <option value="Portaria" selected> Portaria </option>
+    <option value="Comum" selected> Comum </option>
     <option value="NULL" selected>{{$reservation->user ?? old('user_name') ??'Escolha o tipo'}} </option>
 </select>
   <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="unity_code">

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReservationFormRequest;
+use App\Models\Calendar;
 use App\Models\Reservation;
 use App\Models\ReservationDate;
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,28 +36,44 @@ class ReservationController extends Controller
         return view('reservation.index', compact('reservations'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $rooms = Room::get(['code']);
-        return view('reservation.create', compact('rooms'));
+        $room_code = $request->input('room_code');
+        
+        $startTime = $request->input('startTime');
+        
+        $endTime = $request->input('endTime');
+        return view('reservation.create', compact('rooms','room_code','startTime', 'endTime'));
     } 
 
     public function store(ReservationFormRequest $request)
     {
+        dd(Carbon::parse('Sunday')->dayOfWeek);
         $data = $request->merge(['user_email' => auth()->user()->email])->all();
+        $today = \Illuminate\Support\Carbon::today();
         $reservation_code = $this->model->store($data);
 
-        $date = \Illuminate\Support\Carbon::today();
+        
+        
         // $newData['date'] = '2023-02-02';
         // $newData['code'] = $reservation_code->code;
         // dd($newData);
         // $this->resDate->store($newData);
         
-        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$today, $reservation_code->code]);
+
+        if(!$limitDate_semester = DB::table('calendars')->where('limitDate', '>', $today)->orderBy('limitDate', 'asc')->first())
+        {
+            //Semestre não aberto
+            dd('nao aberto');
+        }
+
 
         // $startDate = Carbon::parse($request->start_date);
         // $endDate = Carbon::parse($request->end_date);
-        // $limitDate = Carbon::parse($request->limit_date);
+        
+        $limitDate = Carbon::parse($request->limit_date);
         // $interval = $request->interval; // e.g. '1 week'
     
         // while ($startDate->lessThanOrEqualTo($endDate) && $startDate->lessThanOrEqualTo($limitDate)) {
