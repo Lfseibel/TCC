@@ -7,6 +7,7 @@ use App\Models\Calendar;
 use App\Models\Reservation;
 use App\Models\ReservationDate;
 use App\Models\Room;
+use App\Models\Unity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,41 +50,66 @@ class ReservationController extends Controller
 
     public function store(ReservationFormRequest $request)
     {
-        dd(Carbon::parse('Sunday')->dayOfWeek);
-        $data = $request->merge(['user_email' => auth()->user()->email])->all();
-        $today = \Illuminate\Support\Carbon::today();
-        $reservation_code = $this->model->store($data);
+        $roomCode = $request->input('room_code');
+        $unityCode = auth()->user()->unity->code;
+        $check_User_Room = Unity::whereHas('rooms', function ($query) use ($roomCode) {
+            $query->where('code', $roomCode);
+        })
+        ->where('code', $unityCode)
+        ->exists();
 
-        
-        
-        // $newData['date'] = '2023-02-02';
-        // $newData['code'] = $reservation_code->code;
-        // dd($newData);
-        // $this->resDate->store($newData);
-        
-        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$today, $reservation_code->code]);
-
-        if(!$limitDate_semester = DB::table('calendars')->where('limitDate', '>', $today)->orderBy('limitDate', 'asc')->first())
+        if($check_User_Room)
         {
-            //Semestre não aberto
-            dd('nao aberto');
+            $data = $request->merge(['status' => 1])->all();
         }
-
-
-        // $startDate = Carbon::parse($request->start_date);
-        // $endDate = Carbon::parse($request->end_date);
+        else
+        {
+            $today = \Illuminate\Support\Carbon::today();
+            if(DB::table('calendars')->where('limitDate', '>', $today)->orderBy('limitDate', 'asc')->exists())
+            {
+                return redirect()->back()->withErrors(['error' => 'Sala não liberada pra reserva no periodo atual'])->withInput();
+            }
+        }
+        $data = $request->merge(['user_email' => auth()->user()->email])->all();
+       
+        $reservation_code = $this->model->store($data);
         
-        $limitDate = Carbon::parse($request->limit_date);
-        // $interval = $request->interval; // e.g. '1 week'
-    
-        // while ($startDate->lessThanOrEqualTo($endDate) && $startDate->lessThanOrEqualTo($limitDate)) {
-        //     $reservation = new Reservation;
-        //     $reservation->start_date = $startDate->toDateString();
-        //     $reservation->end_date = $startDate->copy()->add($interval)->subDay()->toDateString();
-        //     $reservation->save();
-        
-        //     $startDate->add($interval);
+        $days = [
+            'Segunda-Feira' => 'Monday',
+            'Terca-Feira' => 'Tuesday',
+            'Quarta-Feira' => 'Wednesday',
+            'Quinta-Feira' => 'Thursday',
+            'Sexta-Feira' => 'Friday',
+            'Sabado' => 'Saturday',
+            'Domingo' => 'Sunday',
+        ];
+        #dd(Carbon::parse($days[$request->input('weekday')])->dayOfWeek);
+       
+        $startDate = Carbon::parse($request->input('startDate'));
+        $endDate = Carbon::parse($request->input('endDate'));
+        $weekDay = Carbon::parse($days[$request->input('weekday')])->dayOfWeek;
+
+        //se e quinzenal
+        // while ($startDate->lte($endDate)) {
+        //     if ($startDate->dayOfWeek === $weekDay) 
+        //     {
+        //         $date = $startDate->format('Y-m-d');
+        //         DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+        //         $startDate->addDays(13);
+        //     }
+        //     $startDate->addDay();
         // }
+
+        //se e semanal
+        while ($startDate->lte($endDate)) {
+            if ($startDate->dayOfWeek === $weekDay) 
+            {
+                $date = $startDate->format('Y-m-d');
+                DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                $startDate->addDays(6);
+            }
+            $startDate->addDay();
+        }
 
         return redirect()->route('reservation.index');
     }
