@@ -9,7 +9,7 @@
     @endif
     <option value="{{ $room->unity_code ?? old('room_code') ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
 </select>
-<select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="times">
+<select  name="times" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
   <option value="Uma">Uma</option>
   <option value="Semanal">Semanal</option>
   <option value="Quinzenal">Quinzenal</option>
@@ -17,13 +17,13 @@
 </select>
 <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="weekday">
   <option value="Segunda-Feira">Segunda-Feira</option>
-  <option value="Terça-Feira">Terça-Feira</option>
+  <option value="Terca-Feira">Terca-Feira</option>
   <option value="Quarta-Feira">Quarta-Feira</option>
   <option value="Quinta-Feira">Quinta-Feira</option>
   <option value="Sexta-Feira">Sexta-Feira</option>
   <option value="Sabado">Sabado</option>
   <option value="Domingo">Domingo</option>
-  <option value="{{ old('weekday') ?? NULL }}" selected>{{ old('weekday') ??'Escolha o dia da semana (0-6 // Domingo - Sabado)'}} </option>
+  <option value="{{ old('weekday') ?? NULL }}" selected>{{ old('weekday') ?? 'Escolha o dia da semana '}} </option>
 </select>
   <input type="text" name="acronym" placeholder="Sigla:" value="{{ $reservation->acronym ?? old('acronym') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <input type="text" name="class" placeholder="Turma:" value="{{ $reservation->class ?? old('class') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">

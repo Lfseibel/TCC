@@ -20,6 +20,7 @@ class UserController extends Controller
 
     public function auth(UserLoginRequest $request)
     {
+        
         if(Auth::attempt($request->only('email', 'password')))
         {
             $request->session()->regenerate();
@@ -27,7 +28,7 @@ class UserController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error','Email or password invalid');
+            return redirect()->back()->withErrors(['error' => 'Email or password invalid']);
         }
     }
 

@@ -27,7 +27,7 @@ class Unity extends Model
 
     public function rooms()
     {
-        return $this->belongsToMany(Rooms::class);
+        return $this->belongsToMany(Room::class);
     }
 
     public function store($data)
