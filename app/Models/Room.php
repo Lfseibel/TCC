@@ -23,6 +23,14 @@ class Room extends Model
         'block_code'
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($room) {
+            $unityCodes = ['MI']; 
+            $room->unities()->syncWithoutDetaching($unityCodes);
+        });
+    }
+
     public function block()
     {
         return $this->belongsTo(Block::class, 'block_code', 'code'); 

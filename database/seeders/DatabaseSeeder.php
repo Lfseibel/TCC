@@ -24,7 +24,9 @@ class DatabaseSeeder extends Seeder
         Calendar::create([
             'year' => 2023,
             'period' => 1,
-            'limitDate' => '2023/07/26'
+            'limitDate' => '2023/02/20',
+            'startSemester' => '2023/03/01',
+            'endSemester' => '2023/07/24',
         ]);
 
         Room::create([

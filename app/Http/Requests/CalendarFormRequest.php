@@ -27,6 +27,8 @@ class CalendarFormRequest extends FormRequest
             'year' => ['required', 'integer'], 
             'period' => ['required', 'integer'],
             'limitDate' => ['required', 'date'],
+            'startSemester' => ['required', 'date'],
+            'endSemester' => ['required', 'date'],
         ];
 
         return $rules;

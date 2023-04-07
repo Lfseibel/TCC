@@ -27,7 +27,8 @@ class RoomController extends Controller
     {
         $blocks = Block::get(['code']);
         $unities = Unity::get(['code']);
-        return view('room.create', compact(['blocks', 'unities']));
+        $room = [];
+        return view('room.create', compact(['blocks', 'unities', 'room']));
     } 
 
     public function store(RoomFormRequest $request)
@@ -35,7 +36,7 @@ class RoomController extends Controller
         $room = $this->model->store($request->all());
 
         $unities = $request->input('unities');
-        $room->unities()->attach($unities);
+        $room->unities()->syncWithoutDetaching($unities);
 
 
         return redirect()->route('room.index');
@@ -61,7 +62,7 @@ class RoomController extends Controller
 
         $room->update($request->all());
         $unities = $request->input('unities');
-        $room->unities()->syncWithoutDetaching($unities);
+        $room->unities()->sync($unities);
 
         return redirect()->route('room.index');
     }

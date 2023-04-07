@@ -50,30 +50,21 @@ class ReservationController extends Controller
 
     public function store(ReservationFormRequest $request)
     {
+        $today = \Illuminate\Support\Carbon::today();
+        $startDate = Carbon::parse($request->input('startDate'));
+        $endDate = Carbon::parse($request->input('endDate'));
+        if(!$calendar = DB::table('calendars')->where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first())
+        {
+            return redirect()->back()->withErrors(['error' => 'Não existe um calendario aberto, aguarde o administrador do sistema abrir um para realizar sua reserva'])->withInput();
+        }
+        if($startDate < $calendar->startSemester or $endDate > $calendar->endSemester)
+        {
+            return redirect()->back()->withErrors(['error' => "Reserva indisponível durante as datas solicitadas, o semestre atual começa no dia $calendar->startSemester e termina no dia $calendar->endSemester"])->withInput();
+        }
         $roomCode = $request->input('room_code');
-        $unityCode = auth()->user()->unity->code;
-        $check_User_Room = Unity::whereHas('rooms', function ($query) use ($roomCode) {
-            $query->where('code', $roomCode);
-        })
-        ->where('code', $unityCode)
-        ->exists();
-
-        if($check_User_Room)
-        {
-            $data = $request->merge(['status' => 1])->all();
-        }
-        else
-        {
-            $today = \Illuminate\Support\Carbon::today();
-            if(DB::table('calendars')->where('limitDate', '>', $today)->orderBy('limitDate', 'asc')->exists())
-            {
-                return redirect()->back()->withErrors(['error' => 'Sala não liberada pra reserva no periodo atual'])->withInput();
-            }
-        }
-        $data = $request->merge(['user_email' => auth()->user()->email])->all();
-       
-        $reservation_code = $this->model->store($data);
-        
+        $startTime = $request->input('startTime');
+        $endTime = $request->input('endTime');
+        $numberTimes =  $request->input('times');
         $days = [
             'Segunda-Feira' => 'Monday',
             'Terca-Feira' => 'Tuesday',
@@ -83,32 +74,144 @@ class ReservationController extends Controller
             'Sabado' => 'Saturday',
             'Domingo' => 'Sunday',
         ];
-        #dd(Carbon::parse($days[$request->input('weekday')])->dayOfWeek);
-       
-        $startDate = Carbon::parse($request->input('startDate'));
-        $endDate = Carbon::parse($request->input('endDate'));
         $weekDay = Carbon::parse($days[$request->input('weekday')])->dayOfWeek;
 
-        //se e quinzenal
-        // while ($startDate->lte($endDate)) {
-        //     if ($startDate->dayOfWeek === $weekDay) 
-        //     {
-        //         $date = $startDate->format('Y-m-d');
-        //         DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
-        //         $startDate->addDays(13);
-        //     }
-        //     $startDate->addDay();
-        // }
+        $helperStartDate = $startDate;
+        //verificar se existe reserva na sala durante o periodo solicitado
+        switch ($numberTimes) {
+            case 'Uma':
+                $checker = FALSE;
+                while ($helperStartDate->lte($endDate) and $checker != TRUE) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $checker = TRUE;
+                    }
+                    $helperStartDate->addDay();
+                }
+                $check = Reservation::where('room_code', $roomCode)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<=', $endTime)
+                                                              ->where('endTime', '>=', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                if($check)
+                {
+                    return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia'])->withInput();
+                }
+                
+                break;
+            case 'Semanal':
+                while ($helperStartDate->lte($endDate)) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $check = Reservation::where('room_code', $roomCode)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<=', $endTime)
+                                                              ->where('endTime', '>=', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                        if($check)
+                        {
+                            return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
+                        }
+                        $helperStartDate->addDays(6);
+                    }
+                    $helperStartDate->addDay();
+                }
+                break;
+            case 'Quinzenal':
+                while ($helperStartDate->lte($endDate)) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $check = Reservation::where('room_code', $roomCode)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<=', $endTime)
+                                                              ->where('endTime', '>=', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                        if($check)
+                        {
+                            return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
+                        }
+                        $helperStartDate->addDays(13);
+                    }
+                    $helperStartDate->addDay();
+                }
+                break;
+            default:
+                return redirect()->back()->withErrors(['error' => 'Selecione uma opção valida'])->withInput();
+                break;
+        }
 
-        //se e semanal
-        while ($startDate->lte($endDate)) {
-            if ($startDate->dayOfWeek === $weekDay) 
+        $unityCode = auth()->user()->unity->code;
+        $check_User_Unity = Unity::whereHas('rooms', function ($query) use ($roomCode) {
+            $query->where('code', $roomCode);
+        })
+        ->where('code', $unityCode)
+        ->exists();
+        if($check_User_Unity)
+        {
+            $data = $request->merge(['status' => 1])->all();
+        }
+        else
+        {
+            if($calendar->limitDate <= $today)
             {
+                return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
+            }
+        }
+        $data = $request->merge(['user_email' => auth()->user()->email])->all();
+       
+        $reservation_code = $this->model->store($data);
+
+        switch ($numberTimes) {
+            case 'Uma':
                 $date = $startDate->format('Y-m-d');
                 DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
-                $startDate->addDays(6);
-            }
-            $startDate->addDay();
+                break;
+            case 'Semanal':
+                while ($startDate->lte($endDate)) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                        $startDate->addDays(6);
+                    }
+                    $startDate->addDay();
+                }
+                break;
+            case 'Quinzenal':
+                
+                while ($startDate->lte($endDate)) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                        $startDate->addDays(13);
+                    }
+                    $startDate->addDay();
+                }
+                break;
+            default:
+                return redirect()->back()->withErrors(['error' => 'Selecione uma opção valida'])->withInput();
+                break;
         }
 
         return redirect()->route('reservation.index');

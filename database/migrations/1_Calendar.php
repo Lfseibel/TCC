@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('year');
             $table->integer('period');
             $table->date('limitDate');
+            $table->date('startSemester');
+            $table->date('endSemester');
             $table->primary(['year', 'period']);
         });
     }

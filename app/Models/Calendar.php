@@ -21,6 +21,8 @@ class Calendar extends Model
         'year',
         'period',
         'limitDate',
+        'startSemester',
+        'endSemester',
     ];
 
     public function store($data)
