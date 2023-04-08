@@ -3,17 +3,23 @@
 @section('title', 'Reservas')
 
 @section('content')
+@include('includes.validation-form')
 
-
-{{auth()->user()->email}}
 <article class="flex items-center justify-center flex-col mt-8">
   <div class="flex mb-8">
-    <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Reservas:</h1>
+    <h1 class="text-2xl font-semibold leading-tigh py-2 mr-48">Reservas:</h1>
+    <form action="{{ route('reservation.index') }}" method="get" class="flex align-center ">
+      @csrf
+      <select name="status" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-24">
+        <option value="0" >Pendente</option>
+        <option value="1" >Aprovado</option>
+        <option value="" selected>Status</option>
+      </select>
+      <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-24">Pesquisar</button>
+    </form>
     <a href="{{ route('reservation.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Reserva</a>
   </div>
-  <div class="flex flex-col">
   
-  </div>
   <table class="leading-normal shadow-md rounded-lg overflow-hidden">
     <thead>
         <tr>
@@ -47,12 +53,13 @@
           >
             Editar
           </th>
+          @if (auth()->user()->type === 'Admin')
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Deletar
+            Aprovar
           </th>
-          
+          @endif
         </tr>
       </thead>
       <tbody>
@@ -75,34 +82,40 @@
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               @if ($reservation->status)
-                <p class="text-green">SIM</p>
+                <p class="text-green-700">SIM</p>
               @else
-                <p class="text-red">NÃO</p>
+                <p class="text-red-700">NÃO</p>
               @endif
               
                 
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <a href="{{ route('reservation.see', $reservation->code) }}" class="bg-green-200 rounded-full py-2 px-6">Ver</a>
+              <a href="{{ route('reservation.see', $reservation->code) }}" class="bg-green-200 rounded-full hover:bg-green-500 py-2 px-6">Ver</a>
           </td>
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <form action="{{ route('reservation.edit', $reservation->code) }}" method="GET">
+                @csrf
+                <button type="submit" class="rounded-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4">Editar</button>
+              </form>
+            </td>
+            @if (auth()->user()->type === 'Admin')
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <form action="{{ route('reservation.update', $reservation->code) }}" method="POST">
                 @method('PUT')
                 @csrf
-                <button type="submit" class="rounded-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4">Verificar</button>
+                <button type="submit" class="rounded-full bg-unifei-500 hover:bg-unifei-800 text-white font-bold py-2 px-4">Aprovar</button>
               </form>
             </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form action="{{ route('reservation.destroy', $reservation->code) }}" method="POST">
-                @method('DELETE')
-                @csrf
-                <button type="submit" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
-              </form>
-            </td>
+            @endif
         </tr>
     @endforeach
     </tbody>
   </table>
   </article>
+
+
+  <div class="py-4 flex items-center justify-center">
+    {{$reservations->appends(['status'=> request()->get('status', '')])->links()}}
+  </div>
 
 @endsection

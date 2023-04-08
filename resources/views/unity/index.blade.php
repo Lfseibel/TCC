@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content')
-{{auth()->user()->email}}
+
 <article class="flex items-center justify-center flex-col mt-8">
   <div class="flex mb-8">
     <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Unidades:</h1>

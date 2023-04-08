@@ -29,6 +29,26 @@ class DatabaseSeeder extends Seeder
             'endSemester' => '2023/07/24',
         ]);
 
+        Unity::create([
+            'code' => 'PRG',
+            'name' => 'Pró reitoria de graduação'
+        ]);
+
+        Unity::create([
+            'code' => 'DSG',
+            'name' => 'Algo'
+        ]);
+
+        Unity::create([
+            'code' => 'IMC',
+            'name' => 'Instituto de matemática e computação'
+        ]);
+
+        Unity::create([
+            'code' => 'IEPG',
+            'name' => 'Instituto de engenharia'
+        ]);
+
         Room::create([
             'code' => 'C1004',
             'capacity' => 50,
@@ -50,37 +70,41 @@ class DatabaseSeeder extends Seeder
             'block_code' => 'C'
         ]);
 
-        Unity::create([
-            'code' => 'MI',
-            'name' => 'Math institute'
-        ]);
+        
 
         User::create([
             'email' => 'admin@admin.com',
             'password' => bcrypt('1234'),
             'type' => 'Admin',
-            'unity_code' => 'MI'
+            'unity_code' => 'PRG'
         ]);
 
         User::create([
-            'email' => 'direcao@direcao.com',
+            'email' => 'direcao@imc.com',
             'password' => bcrypt('1234'),
             'type' => 'Direcao',
-            'unity_code' => 'MI'
+            'unity_code' => 'IMC'
+        ]);
+
+        User::create([
+            'email' => 'direcao@iepg.com',
+            'password' => bcrypt('1234'),
+            'type' => 'Direcao',
+            'unity_code' => 'IEPG'
         ]);
 
         User::create([
             'email' => 'portaria@portaria.com',
             'password' => bcrypt('1234'),
             'type' => 'Portaria',
-            'unity_code' => 'MI'
+            'unity_code' => 'PRG'
         ]);
 
         User::create([
             'email' => 'comum@comum.com',
             'password' => bcrypt('1234'),
             'type' => 'Comum',
-            'unity_code' => 'MI'
+            'unity_code' => 'IMC'
         ]);
 
         Schedule::create([

@@ -62,6 +62,8 @@ class RoomController extends Controller
 
         $room->update($request->all());
         $unities = $request->input('unities');
+        $unities[] = 'PRG';
+        $unities[] = 'DSG';
         $room->unities()->sync($unities);
 
         return redirect()->route('room.index');

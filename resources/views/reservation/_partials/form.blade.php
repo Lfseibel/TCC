@@ -7,7 +7,7 @@
         <option value="{{ $room->code}}">{{$room->code}} </option>
       @endforeach
     @endif
-    <option value="{{ $room->unity_code ?? old('room_code') ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
+    <option value="{{ $room->unity_code ?? old('room_code') ?? $room_code ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
 </select>
 <select  name="times" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
   <option value="Uma">Uma</option>
@@ -17,7 +17,7 @@
 </select>
 <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="weekday">
   <option value="Segunda-Feira">Segunda-Feira</option>
-  <option value="Terça-Feira">Terça-Feira</option>
+  <option value="Terca-Feira">Terca-Feira</option>
   <option value="Quarta-Feira">Quarta-Feira</option>
   <option value="Quinta-Feira">Quinta-Feira</option>
   <option value="Sexta-Feira">Sexta-Feira</option>
@@ -31,9 +31,9 @@
   <textarea rows="1" name="observation" class="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2 mt-4" placeholder="Observação">{{ $reservation->observation ?? old('observation') }}</textarea>
   <input type="text" name="responsible" placeholder="Responsável:" value="{{ $reservation->responsible ?? old('responsible') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Data de início</label>
-  <input type="date" name="startDate" placeholder="Data começo:" value="{{ $reservation->startDate ?? old('startDate') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="date" name="startDate" placeholder="Data começo:" value="{{ $reservation->startDate ?? old('startDate') ?? $startDate }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Data de fim</label>
-  <input type="date" name="endDate" placeholder="Data fim:" value="{{ $reservation->endDate ?? old('endDate') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="date" name="endDate" placeholder="Data fim:" value="{{ $reservation->endDate ?? old('endDate') ?? $endSemester }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de começo</label>
   <input type="time" name="startTime" placeholder="Horario começo:" value="{{ $reservation->startTime ?? old('startTime') ?? $startTime}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de fim</label>

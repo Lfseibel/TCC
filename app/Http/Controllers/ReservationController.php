@@ -26,13 +26,13 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         
-        if(auth()->user()->type === 'professor')
+        if(auth()->user()->type === 'Direcao')
         {
-            $reservations = $this->model->where('code', 'LIKE', "%{$request->search}%")->where('user_email', '=', auth()->user()->email)->get();
+            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->where('user_email', '=', auth()->user()->email)->paginate(7);
         }
         else
         {
-            $reservations = $this->model->where('code', 'LIKE', "%{$request->search}%")->get();
+            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->paginate(7);
         }
         return view('reservation.index', compact('reservations'));
     }
@@ -45,14 +45,26 @@ class ReservationController extends Controller
         $startTime = $request->input('startTime');
         
         $endTime = $request->input('endTime');
-        return view('reservation.create', compact('rooms','room_code','startTime', 'endTime'));
+        if(!$startDate = $request->input('startDate'))
+        {
+            $startDate = Carbon::today()->toDateString();
+        }
+        
+        if(!$calendar = DB::table('calendars')->where('startSemester', '<=', $startDate)->where('endSemester', '>=', $startDate)->first())
+        {
+            return redirect()->back()->withErrors(['error' => 'Não existe um calendario aberto, aguarde o administrador do sistema abrir um para realizar sua reserva']);
+        }
+        
+        $endSemester = $calendar->endSemester;
+
+        return view('reservation.create', compact('rooms','room_code','startTime', 'endTime', 'startDate', 'endSemester'));
     } 
 
     public function store(ReservationFormRequest $request)
     {
         $today = \Illuminate\Support\Carbon::today();
-        $startDate = Carbon::parse($request->input('startDate'));
-        $endDate = Carbon::parse($request->input('endDate'));
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
         if(!$calendar = DB::table('calendars')->where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first())
         {
             return redirect()->back()->withErrors(['error' => 'Não existe um calendario aberto, aguarde o administrador do sistema abrir um para realizar sua reserva'])->withInput();
@@ -76,7 +88,7 @@ class ReservationController extends Controller
         ];
         $weekDay = Carbon::parse($days[$request->input('weekday')])->dayOfWeek;
 
-        $helperStartDate = $startDate;
+        $helperStartDate = Carbon::parse($request->input('startDate'));
         //verificar se existe reserva na sala durante o periodo solicitado
         switch ($numberTimes) {
             case 'Uma':
@@ -179,9 +191,20 @@ class ReservationController extends Controller
        
         $reservation_code = $this->model->store($data);
 
+        $startDate = Carbon::parse($request->input('startDate'));
         switch ($numberTimes) {
             case 'Uma':
-                $date = $startDate->format('Y-m-d');
+                $checker = FALSE;
+                while ($startDate->lte($endDate) and $checker != TRUE) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        $checker = TRUE;
+                    }
+                    $startDate->addDay();
+                }
+                
                 DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
                 break;
             case 'Semanal':
@@ -217,15 +240,37 @@ class ReservationController extends Controller
         return redirect()->route('reservation.index');
     }
 
+    public function see($code)
+    {
+        if(!$reservation = $this->model->find($code))
+        {
+            return redirect()->route('reservation.index');
+        }
+        
+        foreach ($reservation->reservationDates as $date) {
+            foreach ($date->getAttributes() as $key => $value) {
+                if ($key === 'date') {
+                    $dates[] = $value;
+                }
+            }
+        }
+        
+        return view('reservation.see', compact('reservation', 'dates'));
+    }
+
     public function edit($code)
     {
         if(!$reservation = $this->model->find($code))
         {
             return redirect()->route('reservation.index');
         }
-        $data['status'] = 1;
+        
+        if($reservation->status)
+        {
+            return redirect()->back()->withErrors(['error' => 'Reserva já aprovada, edição não permitida']);
+        }
 
-        $reservation->update($data);
+
         return view('reservation.edit', compact('reservation'));
     }
 

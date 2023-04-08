@@ -68,14 +68,14 @@ class CalendarController extends Controller
         return redirect()->route('calendar.index');
     }
 
-    public function destroy($code)
+    public function destroy($year, $period)
     {
-        if(!$calendar = $this->model->find($code))
+        if(!$calendar = $this->model->where('year', '=', "{$year}")->where('period', '=', "{$period}")->first())
         {
             return redirect()->route('calendar.index');
         }
-        
-        $calendar->delete();
+
+        $this->model->where('year', '=', "{$year}")->where('period', '=', "{$period}")->delete();
 
         return redirect()->route('calendar.index');
     }

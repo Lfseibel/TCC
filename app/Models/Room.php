@@ -26,7 +26,7 @@ class Room extends Model
     protected static function booted()
     {
         static::created(function ($room) {
-            $unityCodes = ['MI']; 
+            $unityCodes = ['PRG', 'DSG']; 
             $room->unities()->syncWithoutDetaching($unityCodes);
         });
     }

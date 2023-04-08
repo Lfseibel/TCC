@@ -2,24 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
 use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\Schedule;
+use App\Models\Unity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $schedulesCode = Schedule::orderBy('startTime')->pluck('code');
         $schedulesTimes = Schedule::selectRaw("DATE_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(endTime, '%H:%i') as endTime")
-    ->orderBy('startTime', 'asc')
-    ->get();
+        ->orderBy('startTime', 'asc')
+        ->get();
 
-        $date = \Illuminate\Support\Carbon::today();
+        if($request->date)
+        {
+            $date = Carbon::parse($request->date);
+        }
+        else
+        {
+            $date = Carbon::today();
+        }
+        
+        $block = $request->input('block');
+        $unity = $request->input('unity');
 
-        $rooms = Room::select('code')->get();
-
+        if($unity)
+        {
+            $rooms = Room::where('block_code', 'LIKE', "%{$block}%")
+            ->whereHas('unities', function ($query) use ($unity) {
+                $query->where('code', $unity);
+            })
+            ->paginate(9);
+        }
+        else
+        {
+            $rooms = Room::where('block_code', 'LIKE', "%{$request->block}%")->paginate(9);
+        }
+        
         $results = [];
         $schedules = Schedule::orderBy('startTime', 'asc')->get();
         foreach ($rooms as $room) {
@@ -46,7 +70,12 @@ class IndexController extends Controller
         
             $results[$roomCode] = $reserved;
         }
-        return view('index', compact(['schedulesCode'],['schedulesTimes'],['results'],['schedules']));
+
+        $blocks = Block::get('code');
+
+        $unities = Unity::get('code');
+
+        return view('index', compact(['schedulesCode'],['schedulesTimes'],['results'],['schedules'], ['blocks'], ['unities'], ['rooms']));
 
 
         

@@ -4,11 +4,34 @@
 
 @section('content')
 
+<form action="{{ route('index') }}" method="get" class="flex align-center justify-around my-4">
+  <input type="date" name="date" placeholder="Date" class="md:w-1/6 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-unifei-500">
+  <select class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500" name="block">
+    @if ($blocks)
+      @foreach ($blocks as $block)
+        <option value="{{ $block->code}}">{{$block->code}} </option>
+      @endforeach
+    @endif
+    <option value="" selected>Bloco</option>
+  </select>
+  <select class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500" name="unity">
+    @if ($unities)
+      @foreach ($unities as $unity)
+        @if ($unity->code!='PRG' and $unity->code!='DSG')
+          <option value="{{ $unity->code}}">{{$unity->code}} </option>
+        @endif
+      @endforeach
+    @endif
+    <option value="" selected>Unidade</option>
+  </select>
+  <input type="text" name="teste" placeholder="Teste" class="md:w-1/6 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-unifei-500">
+  <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded">Pesquisar</button>
+</form>
+
 <table class="mx-auto leading-normal shadow-md rounded-lg overflow-scroll mt-4">
   <thead>
     <tr>
       <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-center text-xs font-semibold text-gray-900 uppercase tracking-wider"></th>
-      {{-- lg:px-2 --}}
       @foreach ($schedulesCode as $schedule)
           
         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-center text-xs font-semibold text-gray-900 uppercase tracking-wider">{{ $schedule }}</th>
@@ -35,7 +58,7 @@
                       @elseif ($reservation && $reservation['reserved']==1)
                       <a href="{{route('reservation.see', $reservation['code']) }}">Solicitado</a>
                       @else
-                      <a href="{{route('reservation.create', ['startTime' => $schedules[$key]->startTime, 'endTime' => $schedules[$key]->endTime,'room_code'=>$roomCode]) }}">---</a>
+                      <a href="{{route('reservation.create', ['startTime' => $schedules[$key]->startTime, 'endTime' => $schedules[$key]->endTime,'room_code'=>$roomCode,'startDate' => request()->query('date')]) }}">---</a>
                       @endif
                       </td>
                     {{-- ? 'Reservado' : '<a href="http://example.com">---</a>' --}}
@@ -45,4 +68,8 @@
     
   </tbody>
 </table>
+
+<div class="py-4 flex items-center justify-center">
+  {{ $rooms->appends(['unity'=> request()->get('unity', ''), 'date'=> request()->get('date', ''), 'block'=> request()->get('block', '')])->links() }}
+</div>
 @endsection
