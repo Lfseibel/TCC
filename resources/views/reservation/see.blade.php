@@ -31,11 +31,23 @@
     
     @endforeach
 
-    <form action="{{ route('reservation.destroy', $reservation->code) }}" method="POST">
-      @method('DELETE')
-      @csrf
-      <button type="submit" class="w-full rounded-full bg-red-500 hover:bg-red-700 text-white font-bold  mt-4 py-2 px-4">Deletar</button>
-    </form>
+    @if (auth()->user()->type === 'Admin')
+      <form action="{{ route('reservation.verify', $reservation->code) }}" method="POST">
+        @method('PUT')
+        @csrf
+        <button type="submit" class="w-full rounded-full bg-unifei-500 hover:bg-unifei-800 text-white font-bold mt-4 py-2 px-4">Aprovar</button>
+      </form>
+    @endif
+    @if ($reservation->user_email == auth()->user()->email or auth()->user()->type === 'Admin')
+      <form action="{{ route('reservation.destroy', $reservation->code) }}" method="POST">
+        @method('DELETE')
+        @csrf
+        <button type="submit" class="w-full rounded-full bg-red-500 hover:bg-red-700 text-white font-bold  mt-8 py-2 px-4">Deletar</button>
+      </form>
+    @endif
+    
+
+    
   </div>
   </div>
 @endsection

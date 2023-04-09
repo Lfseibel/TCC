@@ -100,7 +100,7 @@
             </td>
             @if (auth()->user()->type === 'Admin')
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form action="{{ route('reservation.update', $reservation->code) }}" method="POST">
+              <form action="{{ route('reservation.verify', $reservation->code) }}" method="POST">
                 @method('PUT')
                 @csrf
                 <button type="submit" class="rounded-full bg-unifei-500 hover:bg-unifei-800 text-white font-bold py-2 px-4">Aprovar</button>

@@ -65,7 +65,7 @@ class IndexController extends Controller
                                             })
                                             ->first();
         
-                                            $reserved[$key] = $reservation ? ($reservation->status == 1 ? ['reserved' => 2, 'code' => $reservation->code] : ['reserved' => 1, 'code' => $reservation->code]) : 0;
+                $reserved[$key] = $reservation ? ($reservation->status == 1 ? ['reserved' => 2, 'code' => $reservation->code] : ['reserved' => 1, 'code' => $reservation->code]) : 0;
             }
         
             $results[$roomCode] = $reserved;

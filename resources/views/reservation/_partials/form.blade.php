@@ -7,7 +7,7 @@
         <option value="{{ $room->code}}">{{$room->code}} </option>
       @endforeach
     @endif
-    <option value="{{ $room->unity_code ?? old('room_code') ?? $room_code ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
+    <option value="{{ $reservation->room_code ?? old('room_code') ?? $room_code ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
 </select>
 <select  name="times" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
   <option value="Uma">Uma</option>
