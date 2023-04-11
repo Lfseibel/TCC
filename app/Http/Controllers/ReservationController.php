@@ -203,8 +203,9 @@ class ReservationController extends Controller
         }
         else
         {
-            if($calendar->limitDate <= $today)
+            if($calendar->limitDate->lte($today))
             {
+                dd($calendar->limitDate);
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
             }
         }
