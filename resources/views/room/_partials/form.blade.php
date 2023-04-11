@@ -7,12 +7,12 @@
         <option value="{{ $block->code}}">{{$block->code}} </option>
       @endforeach
     @endif
-    <option value="{{$room->block_code ?? old('block_code') ?? NULL }}" selected>{{$room->block_code ?? old('block_code') ??'Escolha o bloco'}} </option>
+    <option value="{{old('block_code') ?? $room->block_code  ?? NULL }}" selected>{{ old('block_code') ?? $room->block_code ??'Escolha o bloco'}} </option>
 </select>
 
-  <input type="text" name="code" placeholder="Código:" value="{{$room->code ?? old('code') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
-  <input type="text" name="capacity" placeholder="Capacidade" value="{{$room->capacity ?? old('capacity') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
-  <input type="text" name="reduced_capacity" placeholder="Capacidade Reduzida" value="{{ $room->reduced_capacity ?? old('reduced_capacity') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="text" name="code" placeholder="Código:" value="{{old('code') ?? $room->code ?? NULL }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="text" name="capacity" placeholder="Capacidade" value="{{old('capacity') ?? $room->capacity ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="text" name="reduced_capacity" placeholder="Capacidade Reduzida" value="{{ old('reduced_capacity') ?? $room->reduced_capacity ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   
   <label for="unities_multiple" class="block mb-2 text-md font-medium text-gray-900 my-2">Unidades relacionadas:</label>
 
@@ -22,7 +22,7 @@
         @if (($unity->code=='PRG' or $unity->code=='DSG') and Route::currentRouteName() == 'room.create')
         <li>
           <div class="flex items-center p-2 rounded hover:bg-gray-100">
-            <input id="{{$unity->code}}" type="checkbox" value="{{$unity->code}}" name="unities[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" checked>
+            <input id="{{$unity->code}}" type="checkbox" value="{{$unity->code}}" name="unities[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ old('unities', []) ? (in_array($unity->code, old('unities', [])) ? 'checked' : '') : 'checked'}}>
             <label for="{{$unity->code}}" class="w-full ml-2 text-sm font-medium text-gray-900 rounded">{{$unity->code}}</label>
           </div>
         </li>  

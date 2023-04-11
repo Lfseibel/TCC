@@ -7,7 +7,7 @@
         <option value="{{ $room->code}}">{{$room->code}} </option>
       @endforeach
     @endif
-    <option value="{{ $reservation->room_code ?? old('room_code') ?? $room_code ?? NULL }}" selected>{{$reservation->room_code ?? old('room_code') ?? $room_code ??'Escolha a Sala'}} </option>
+    <option value="{{ old('room_code') ?? $reservation->room_code ?? $room_code ?? NULL }}" selected>{{old('room_code') ?? $reservation->room_code ?? $room_code ??'Escolha a Sala'}} </option>
 </select>
 <select  name="times" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
   <option value="Uma">Uma</option>
@@ -25,19 +25,19 @@
   <option value="Domingo">Domingo</option>
   <option value="{{ old('weekday') ?? NULL }}" selected>{{ old('weekday') ??'Escolha o dia da semana'}} </option>
 </select>
-  <input type="text" name="acronym" placeholder="Sigla:" value="{{ $reservation->acronym ?? old('acronym') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
-  <input type="text" name="class" placeholder="Turma:" value="{{ $reservation->class ?? old('class') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
-  <textarea rows="1" name="description" class="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" placeholder="Descrição">{{ $reservation->description ?? old('description') }}</textarea>
-  <textarea rows="1" name="observation" class="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2 mt-4" placeholder="Observação">{{ $reservation->observation ?? old('observation') }}</textarea>
-  <input type="text" name="responsible" placeholder="Responsável:" value="{{ $reservation->responsible ?? old('responsible') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="text" name="acronym" placeholder="Sigla:" value="{{ old('acronym') ?? $reservation->acronym ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="text" name="class" placeholder="Turma:" value="{{ old('class') ?? $reservation->class ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <textarea rows="1" name="description" class="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" placeholder="Descrição">{{ old('description') ?? $reservation->description ?? NULL }}</textarea>
+  <textarea rows="1" name="observation" class="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2 mt-4" placeholder="Observação">{{old('observation') ?? $reservation->observation ?? NULL}}</textarea>
+  <input type="text" name="responsible" placeholder="Responsável:" value="{{  old('responsible') ?? $reservation->responsible ?? NULL }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Data de início</label>
-  <input type="date" name="startDate" placeholder="Data começo:" value="{{ $reservation->startDate ?? old('startDate') ?? $startDate }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="date" name="startDate" placeholder="Data começo:" value="{{ old('startDate') ?? $reservation->startDate ?? $startDate ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Data de fim</label>
-  <input type="date" name="endDate" placeholder="Data fim:" value="{{ $reservation->endDate ?? old('endDate') ?? $endSemester }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="date" name="endDate" placeholder="Data fim:" value="{{ old('endDate') ?? $reservation->endDate ?? $endSemester ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de começo</label>
-  <input type="time" name="startTime" placeholder="Horario começo:" value="{{ old('startTime') ?? $reservation->startTime ?? $startTime}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="time" name="startTime" placeholder="Horario começo:" value="{{ old('startTime') ?? $reservation->startTime ?? $startTime ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de fim</label>
-  <input type="time" name="endTime" placeholder="Horario fim:" value="{{ old('endTime') ?? $reservation->endTime ?? $endTime }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="time" name="endTime" placeholder="Horario fim:" value="{{ old('endTime') ?? $reservation->endTime ?? $endTime ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   
   <button type="submit" class="w-full shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded my-2">
       Enviar

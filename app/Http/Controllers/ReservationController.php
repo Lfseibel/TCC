@@ -205,7 +205,6 @@ class ReservationController extends Controller
         {
             if($calendar->limitDate >= $today->toDateString())
             {
-                dd($calendar->limitDate);
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
             }
         }
@@ -295,7 +294,6 @@ class ReservationController extends Controller
         ->exists();
         if(($reservation->status && auth()->user()->type == 'Comum') || ($reservation->status && !$check_User_Unity && auth()->user()->type == 'Direcao') || !auth()->user()->type == 'Admin')
         {
-            dd($reservation->status && !$check_User_Unity && auth()->user()->type == 'Direcao');
             return redirect()->back()->withErrors(['error' => 'Reserva já aprovada, edição não permitida']);
         }
         
@@ -328,7 +326,7 @@ class ReservationController extends Controller
         })
         ->where('code', $unityCode)
         ->exists();
-        if(!$check_User_Unity)
+        if(!$check_User_Unity && $reservation->status)
         {
             return redirect()->back()->withErrors(['error' => 'Não é possivel modificar sua reserva pois você está solicitando a mudança para uma sala que não pertence a sua unidade'])->withInput();
         }
@@ -381,6 +379,7 @@ class ReservationController extends Controller
                                                               ->where('endTime', '>', $startTime);
                                                       });
                                             })
+                                            ->where('status', 1)
                                             ->first();
                 if($check && $check!=$reservation)
                 {
@@ -402,8 +401,9 @@ class ReservationController extends Controller
                                                               ->where('endTime', '>', $startTime);
                                                       });
                                             })
+                                            ->where('status', 1)
                                             ->exists();
-                        if($check)
+                        if($check && $check!=$reservation)
                         {
                             return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
                         }
@@ -426,8 +426,9 @@ class ReservationController extends Controller
                                                               ->where('endTime', '>', $startTime);
                                                       });
                                             })
+                                            ->where('status', 1)
                                             ->exists();
-                        if($check)
+                        if($check && $check!=$reservation)
                         {
                             return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
                         }
@@ -441,7 +442,7 @@ class ReservationController extends Controller
                 break;
         }
 
-        if($check_User_Unity)
+        if($check_User_Unity && auth()->user()->type === 'Direcao' or auth()->user()->type === 'Admin')
         {
             $data = $request->merge(['status' => 1])->all();
         }

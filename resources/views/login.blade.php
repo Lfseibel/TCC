@@ -26,6 +26,7 @@
           name="email"
           type="email"
           placeholder="Email institucional"
+          value="{{old('email')}}"
           class="w-fit bg-unifei-50 border border-unifei-500 focus:border-unifei-800 focus:ring-2 focus:ring-unifei-500 focus:ring-opacity-50 rounded px-3 py-3 text-lg text-gray-800 placeholder-unifei-200 focus:outline-none transition duration-200 ease-in-out"
         />
         <input
