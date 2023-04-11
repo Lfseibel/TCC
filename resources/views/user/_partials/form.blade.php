@@ -7,7 +7,7 @@
     <option value="Direcao" selected> Direcao </option>
     <option value="Portaria" selected> Portaria </option>
     <option value="Comum" selected> Comum </option>
-    <option value="NULL" selected>{{$reservation->user ?? old('user_name') ??'Escolha o tipo'}} </option>
+    <option value="{{$user->type ?? old('type') ?? NULL}}" selected>{{$user->type ?? old('type') ??'Escolha o tipo'}} </option>
 </select>
   <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="unity_code">
  
@@ -16,7 +16,7 @@
                 <option value="{{ $unity->code}}" selected>{{$unity->code}} </option>
               @endforeach
             @endif
-            <option value="{{ $user->unity_code ?? old('code') ?? NULL }}" selected>{{$reservation->user ?? old('user_name') ??'Escolha a Unidade'}} </option>
+            <option value="{{ $user->unity_code ?? old('unity_code') ?? NULL }}" selected>{{$user->unity_code ?? old('unity_code') ??'Escolha a Unidade'}} </option>
   </select>
   <input type="email" name="email" placeholder="E-mail:" value="{{ $user->email ?? old('email') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <input type="password" name="password" placeholder="Senha:" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">

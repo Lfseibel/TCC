@@ -23,13 +23,13 @@ class Room extends Model
         'block_code'
     ];
 
-    protected static function booted()
-    {
-        static::created(function ($room) {
-            $unityCodes = ['PRG', 'DSG']; 
-            $room->unities()->syncWithoutDetaching($unityCodes);
-        });
-    }
+    // protected static function booted()
+    // {
+    //     static::created(function ($room) {
+    //         $unityCodes = ['PRG', 'DSG']; 
+    //         $room->unities()->syncWithoutDetaching($unityCodes);
+    //     });
+    // }
 
     public function block()
     {

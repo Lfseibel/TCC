@@ -19,7 +19,14 @@
   <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
     @if ($unities)
       @foreach ($unities as $unity)
-        @if ($unity->code!='PRG' and $unity->code!='DSG')
+        @if (($unity->code=='PRG' or $unity->code=='DSG') and Route::currentRouteName() == 'room.create')
+        <li>
+          <div class="flex items-center p-2 rounded hover:bg-gray-100">
+            <input id="{{$unity->code}}" type="checkbox" value="{{$unity->code}}" name="unities[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" checked>
+            <label for="{{$unity->code}}" class="w-full ml-2 text-sm font-medium text-gray-900 rounded">{{$unity->code}}</label>
+          </div>
+        </li>  
+        @else
         <li>
           <div class="flex items-center p-2 rounded hover:bg-gray-100">
             <input id="{{$unity->code}}" type="checkbox" value="{{$unity->code}}" name="unities[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{in_array($unity->code, old('unities', [])) ? 'checked' : ''}} {{ $room ? ((in_array($unity->code, $room->unities->pluck('code')->toArray())) ? 'checked' : '' ): ''}}>

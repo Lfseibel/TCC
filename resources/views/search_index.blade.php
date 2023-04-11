@@ -75,4 +75,7 @@
   </tbody>
 </table>
 
+<div class="py-4 flex items-center justify-center">
+  {{ $rooms->appends(['unity'=> request()->get('unity', ''), 'date'=> request()->get('date', ''), 'block'=> request()->get('block', ''), 'capacity'=> request()->get('capacity', '')])->links() }}
+</div>
 @endsection

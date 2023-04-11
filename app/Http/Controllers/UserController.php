@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         //$search = $request->search;
         //$users = $this->model->where('name', 'LIKE', "%{$request->search}%")->get();
-        $users = $this->model->where('email', 'LIKE', "%{$request->search}%")->get();
+        $users = $this->model->where('email', 'LIKE', "%{$request->search}%")->paginate(7);
         return view('user.index', compact('users'));
     }
 
@@ -67,7 +67,8 @@ class UserController extends Controller
         {
             return redirect()->route('user.index');
         }
-        return view('user.edit', compact('user'));
+        $unities = Unity::get(['code']);
+        return view('user.edit', compact('user','unities'));
     }
 
     public function update(UserFormRequest $request, $email)

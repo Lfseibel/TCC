@@ -125,8 +125,8 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
                                             ->exists();
@@ -147,8 +147,8 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
                                             ->exists();
@@ -172,8 +172,8 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
                                             ->exists();
@@ -203,7 +203,7 @@ class ReservationController extends Controller
         }
         else
         {
-            if($calendar->limitDate->lte($today))
+            if($calendar->limitDate >= $today->toDateString())
             {
                 dd($calendar->limitDate);
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
@@ -286,9 +286,16 @@ class ReservationController extends Controller
         {
             return redirect()->route('reservation.index');
         }
-        
-        if($reservation->status)
+        $roomCode = $reservation->room_code;
+        $unityCode = auth()->user()->unity->code;
+        $check_User_Unity = Unity::whereHas('rooms', function ($query) use ($roomCode) {
+            $query->where('code', $roomCode);
+        })
+        ->where('code', $unityCode)
+        ->exists();
+        if(($reservation->status && auth()->user()->type == 'Comum') || ($reservation->status && !$check_User_Unity && auth()->user()->type == 'Direcao') || !auth()->user()->type == 'Admin')
         {
+            dd($reservation->status && !$check_User_Unity && auth()->user()->type == 'Direcao');
             return redirect()->back()->withErrors(['error' => 'Reserva já aprovada, edição não permitida']);
         }
         
@@ -314,6 +321,18 @@ class ReservationController extends Controller
         {
             return redirect()->route('reservation.index');
         }
+
+        $unityCode = auth()->user()->unity->code;
+        $check_User_Unity = Unity::whereHas('rooms', function ($query) use ($request) {
+            $query->where('code', $request->room_code);
+        })
+        ->where('code', $unityCode)
+        ->exists();
+        if(!$check_User_Unity)
+        {
+            return redirect()->back()->withErrors(['error' => 'Não é possivel modificar sua reserva pois você está solicitando a mudança para uma sala que não pertence a sua unidade'])->withInput();
+        }
+
         $today = \Illuminate\Support\Carbon::today();
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
@@ -339,7 +358,7 @@ class ReservationController extends Controller
             'Domingo' => 'Sunday',
         ];
         $weekDay = Carbon::parse($days[$request->input('weekday')])->dayOfWeek;
-        $reservation->reservationDates()->delete();
+        
         $helperStartDate = Carbon::parse($request->input('startDate'));
         //verificar se existe reserva na sala durante o periodo solicitado
         switch ($numberTimes) {
@@ -358,12 +377,12 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
-                                            ->exists();
-                if($check)
+                                            ->first();
+                if($check && $check!=$reservation)
                 {
                     return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia'])->withInput();
                 }
@@ -379,8 +398,8 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
                                             ->exists();
@@ -403,8 +422,8 @@ class ReservationController extends Controller
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
                                                       ->where(function ($query) use ($startTime, $endTime) {
-                                                        $query->where('startTime', '<=', $endTime)
-                                                              ->where('endTime', '>=', $startTime);
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
                                                       });
                                             })
                                             ->exists();
@@ -422,19 +441,13 @@ class ReservationController extends Controller
                 break;
         }
 
-        $unityCode = auth()->user()->unity->code;
-        $check_User_Unity = Unity::whereHas('rooms', function ($query) use ($roomCode) {
-            $query->where('code', $roomCode);
-        })
-        ->where('code', $unityCode)
-        ->exists();
         if($check_User_Unity)
         {
             $data = $request->merge(['status' => 1])->all();
         }
         else
         {
-            if($calendar->limitDate <= $today)
+            if($calendar->limitDate >= $today->toDateString())
             {
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
             }
@@ -443,6 +456,7 @@ class ReservationController extends Controller
         $reservation->update($data);
 
         $startDate = Carbon::parse($request->input('startDate'));
+        $reservation->reservationDates()->delete();
         switch ($numberTimes) {
             case 'Uma':
                 $checker = FALSE;
@@ -496,6 +510,11 @@ class ReservationController extends Controller
         if(!$reservation = $this->model->find($code))
         {
             return redirect()->route('reservation.index');
+        }
+
+        if($reservation->status)
+        {
+            return redirect()->back()->withErrors(['error' => "Reserva já aprovada"]);
         }
         $startTime = $reservation->startTime;
         $endTime = $reservation->endTime;

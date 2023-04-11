@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function(){
     
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
     Route::get('/index', [IndexController::class, 'index'])->name('index');
+    Route::get('/search_index', [IndexController::class, 'search'])->name('index.search');
 });
 
 

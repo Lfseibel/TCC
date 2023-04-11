@@ -78,4 +78,7 @@
   </table>
   </article>
 
+<div class="py-4 flex items-center justify-center">
+    {{ $schedules->appends(['search'=> request()->get('search', '')])->links() }}
+</div>
 @endsection

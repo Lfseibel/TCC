@@ -10,7 +10,7 @@
 
 <form action="{{ route('user.update', $user->email) }}" method="post" enctype="multipart/form-data">
     @method('PUT')
-    @include('user._partials.edit-form')
+    @include('user._partials.form')
 </form>
 
 @endsection
