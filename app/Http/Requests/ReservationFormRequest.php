@@ -28,8 +28,8 @@ class ReservationFormRequest extends FormRequest
         $rules =[
             'times' => ['required'],
             'weekday' => ['required'],
-            'acronym' => ['required', 'min:1','max:12'], 
-            'class' => ['required', 'min:1', 'max:6'],
+            'acronym' => ['nullable','min:1','max:12'], 
+            'class' => ['nullable','min:1', 'max:6'],
             'description' => ['required', 'min:1', 'max:60'],
             'observation' => ['required', 'min:1', 'max:120'],
             'responsible' => ['required', 'min:1', 'max:120'],

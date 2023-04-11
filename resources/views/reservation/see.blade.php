@@ -3,6 +3,7 @@
 @section('title', 'Visualizar reserva ')
 
 @section('content')
+@include('includes.validation-form')
 <div class="flex items-center justify-center my-8">
   <h1 class="text-2xl font-semibold leading-tigh py-2">Visualizar reserva</h1>
 </div>
@@ -31,7 +32,7 @@
     
     @endforeach
 
-    @if (auth()->user()->type === 'Admin')
+    @if (auth()->user()->type === 'Admin' && !$reservation->status)
       <form action="{{ route('reservation.verify', $reservation->code) }}" method="POST">
         @method('PUT')
         @csrf

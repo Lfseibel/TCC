@@ -17,7 +17,7 @@ class ScheduleController extends Controller
 
     public function index(Request $request)
     {
-        $schedules = $this->model->where('code', 'LIKE', "%{$request->search}%")->get();
+        $schedules = $this->model->where('code', 'LIKE', "%{$request->search}%")->orderBy('startTime', 'asc')->paginate(7);
         return view('schedule.index', compact('schedules'));
     }
 

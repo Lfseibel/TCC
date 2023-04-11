@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id('code');
-            $table->char('acronym', 12);
-            $table->char('class', 6);
+            $table->char('acronym', 12)->nullable();
+            $table->char('class', 6)->nullable();
             $table->char('description', 60);
             $table->char('observation', 120);
             $table->char('responsible', 120);

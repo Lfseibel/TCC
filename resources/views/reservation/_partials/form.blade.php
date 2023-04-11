@@ -35,9 +35,9 @@
   <label>Data de fim</label>
   <input type="date" name="endDate" placeholder="Data fim:" value="{{ $reservation->endDate ?? old('endDate') ?? $endSemester }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de começo</label>
-  <input type="time" name="startTime" placeholder="Horario começo:" value="{{ $reservation->startTime ?? old('startTime') ?? $startTime}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="time" name="startTime" placeholder="Horario começo:" value="{{ old('startTime') ?? $reservation->startTime ?? $startTime}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <label>Hora de fim</label>
-  <input type="time" name="endTime" placeholder="Horario fim:" value="{{ $reservation->endTime ?? old('endTime') ?? $endTime }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
+  <input type="time" name="endTime" placeholder="Horario fim:" value="{{ old('endTime') ?? $reservation->endTime ?? $endTime }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   
   <button type="submit" class="w-full shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded my-2">
       Enviar

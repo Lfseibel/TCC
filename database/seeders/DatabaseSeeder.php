@@ -29,12 +29,12 @@ class DatabaseSeeder extends Seeder
             'endSemester' => '2023/07/24',
         ]);
 
-        Unity::create([
+        $unity1 = Unity::create([
             'code' => 'PRG',
             'name' => 'Pró reitoria de graduação'
         ]);
 
-        Unity::create([
+        $unity2 = Unity::create([
             'code' => 'DSG',
             'name' => 'Algo'
         ]);
@@ -49,27 +49,30 @@ class DatabaseSeeder extends Seeder
             'name' => 'Instituto de engenharia'
         ]);
 
-        Room::create([
+        $room = Room::create([
             'code' => 'C1004',
             'capacity' => 50,
             'reduced_capacity' => 25,
             'block_code' => 'C'
         ]);
-
-        Room::create([
+        $room->unities()->attach($unity1);
+        $room->unities()->attach($unity2);
+        $room = Room::create([
             'code' => 'C1005',
             'capacity' => 50,
             'reduced_capacity' => 25,
             'block_code' => 'C'
         ]);
-
-        Room::create([
+        $room->unities()->attach($unity1);
+        $room->unities()->attach($unity2);
+        $room = Room::create([
             'code' => 'C1006',
             'capacity' => 50,
             'reduced_capacity' => 25,
             'block_code' => 'C'
         ]);
-
+        $room->unities()->attach($unity1);
+        $room->unities()->attach($unity2);
         
 
         User::create([
@@ -115,13 +118,13 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'M2',
-            'startTime' => '07:56',
+            'startTime' => '07:55',
             'endTime' => '08:50'
         ]);
 
         Schedule::create([
             'code' => 'M3',
-            'startTime' => '08:51',
+            'startTime' => '08:50',
             'endTime' => '9:45'
         ]);
 
@@ -133,7 +136,7 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'M5',
-            'startTime' => '11:06',
+            'startTime' => '11:05',
             'endTime' => '12:00'
         ]);
 
@@ -145,7 +148,7 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'T2',
-            'startTime' => '14:26',
+            'startTime' => '14:25',
             'endTime' => '15:20'
         ]);
 
@@ -157,13 +160,13 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'T4',
-            'startTime' => '16:41',
+            'startTime' => '16:40',
             'endTime' => '17:35'
         ]);
 
         Schedule::create([
             'code' => 'T5',
-            'startTime' => '17:36',
+            'startTime' => '17:35',
             'endTime' => '18:30'
         ]);
 
@@ -175,7 +178,7 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'N2',
-            'startTime' => '19:51',
+            'startTime' => '19:50',
             'endTime' => '20:40'
         ]);
 
@@ -187,13 +190,13 @@ class DatabaseSeeder extends Seeder
 
         Schedule::create([
             'code' => 'N4',
-            'startTime' => '21:51',
+            'startTime' => '21:50',
             'endTime' => '22:40'
         ]);
 
         Schedule::create([
             'code' => 'N5',
-            'startTime' => '22:41',
+            'startTime' => '22:40',
             'endTime' => '23:30'
         ]);
     }

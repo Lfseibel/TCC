@@ -31,7 +31,7 @@ class RoomFormRequest extends FormRequest
             'capacity' => ['required', 'integer'],
             'reduced_capacity' => ['required', 'integer'],
             'block_code' => ['required', 'min:1', 'max:8', 'exists:blocks,code'],
-            'unities' => ['required']
+            'unities' => ['nullable']
         ];
 
         if($this->method()=="PUT")#como é o mesmo arquivo de regras tanto pro armazenamento tanto pro update, usa isso pra diferenciar de acordo com o metodo http
@@ -39,6 +39,7 @@ class RoomFormRequest extends FormRequest
             $rules= [
             'code' => ['required', 'min:1','max:10', "unique:rooms,code,$code,code"], 
             ];
+            
         }
 
         return $rules;
