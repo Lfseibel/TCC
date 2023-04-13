@@ -68,6 +68,11 @@ class CalendarController extends Controller
         return redirect()->route('calendar.index');
     }
 
+    public function export($year, $period)
+    {
+        
+    }
+
     public function destroy($year, $period)
     {
         if(!$calendar = $this->model->where('year', '=', "{$year}")->where('period', '=', "{$period}")->first())
