@@ -13,8 +13,19 @@
       <select name="status" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-24">
         <option value="0" >Pendente</option>
         <option value="1" >Aprovado</option>
-        <option value="" selected>Status</option>
+        <option value="{{request()->query('status')}}" selected>{{request()->query('status') ?? 'Status'}}</option>
       </select>
+      @if ($calendars)
+      <select name="calendar" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-24">
+        @foreach ($calendars as $calendar)
+          <option value="{{$calendar->year.'.'.$calendar->period}}" >{{$calendar->year.'.'.$calendar->period}}</option>
+        @endforeach
+        
+        <option value="{{request()->query('calendar')}}" selected>{{request()->query('calendar') ?? 'Calendario'}}</option>
+      </select>
+      @endif
+      
+
       <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-24">Pesquisar</button>
     </form>
     <a href="{{ route('reservation.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Reserva</a>
@@ -60,6 +71,14 @@
             Aprovar
           </th>
           @endif
+          @if ($notLastCalendar)
+          <th
+          class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+        >
+          Importar
+        </th>
+          @endif
+          
         </tr>
       </thead>
       <tbody>
@@ -107,6 +126,15 @@
               </form>
             </td>
             @endif
+            @if ($notLastCalendar)
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <form action="{{ route('reservation.import', $reservation->code) }}" method="POST">
+                @csrf
+                <button type="submit" class="rounded-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4">Importar</button>
+              </form>
+            </td>
+            @endif
+            
         </tr>
     @endforeach
     </tbody>
@@ -115,7 +143,7 @@
 
 
   <div class="py-4 flex items-center justify-center">
-    {{$reservations->appends(['status'=> request()->get('status', '')])->links()}}
+    {{$reservations->appends(['status'=> request()->get('status', ''),'calendar'=> request()->get('calendar', '')])->links()}}
   </div>
 
 @endsection

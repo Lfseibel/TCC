@@ -19,7 +19,7 @@ class CalendarController extends Controller
 
     public function index(Request $request)
     {
-        $calendars = $this->model->where('year', 'LIKE', "%{$request->search}%")->get();
+        $calendars = $this->model->where('year', 'LIKE', "%{$request->search}%")->paginate(7);
         return view('calendar.index', compact('calendars'));
     }
 
@@ -66,11 +66,6 @@ class CalendarController extends Controller
         DB::table('calendars')->where('year', $year)->where('period', $period)->update($data);
 
         return redirect()->route('calendar.index');
-    }
-
-    public function export($year, $period)
-    {
-        
     }
 
     public function destroy($year, $period)

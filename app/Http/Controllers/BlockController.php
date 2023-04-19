@@ -17,7 +17,7 @@ class BlockController extends Controller
 
     public function index(Request $request)
     {
-        $blocks = $this->model->where('code', 'LIKE', "%{$request->search}%")->get();
+        $blocks = $this->model->where('code', 'LIKE', "%{$request->search}%")->paginate(7);
         return view('block.index', compact('blocks'));
     }
 

@@ -87,5 +87,8 @@
     </tbody>
   </table>
   </article>
+  <div class="py-4 flex items-center justify-center">
+    {{$rooms->appends(['status'=> request()->get('status', '')])->links()}}
+  </div>
 
 @endsection

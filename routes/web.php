@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/see/{code}/reservation', [ReservationController::class, 'see'])->name('reservation.see');
 
     Route::middleware('admin')->group(function(){
+        Route::post('/import/reservation/{code}', [ReservationController::class, 'import'])->name('reservation.import');
         /* Room related routes */
         Route::get('/rooms', [RoomController::class, 'index'])->name('room.index');
         Route::delete('/room/{code}', [RoomController::class, 'destroy'])->name('room.destroy');

@@ -76,5 +76,7 @@
     </tbody>
   </table>
   </article>
-
+  <div class="py-4 flex items-center justify-center">
+    {{$calendars->appends(['status'=> request()->get('status', '')])->links()}}
+  </div>
 @endsection

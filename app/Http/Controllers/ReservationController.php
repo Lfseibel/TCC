@@ -25,16 +25,217 @@ class ReservationController extends Controller
 
     public function index(Request $request)
     {
-        
-        if(auth()->user()->type === 'Direcao' or auth()->user()->type === 'Comum')
-        {
-            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->where('user_email', '=', auth()->user()->email)->orderByDesc('code')->paginate(7);
+        if($request->input('calendar'))
+        {   
+            $parts = explode('.', $request->input('calendar'));
+            $year = (int)$parts[0];
+            $period = (int)$parts[1];
+            $calendar = Calendar::where('year', $year)->where('period', $period)->first();
+            $startDate = $calendar->startSemester;
+            $endDate = $calendar->endSemester;
         }
         else
         {
-            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->orderByDesc('code')->paginate(7);
+            $today = \Illuminate\Support\Carbon::today();
+            $calendar = DB::table('calendars')->where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first();
+            $startDate = $calendar->startSemester;
+            $endDate = $calendar->endSemester;
         }
-        return view('reservation.index', compact('reservations'));
+        
+        if(auth()->user()->type === 'Direcao' or auth()->user()->type === 'Comum')
+        {
+            $reservations = $this->model
+            ->where('status', 'LIKE', "%{$request->input('status')}%")
+            ->where('user_email', '=', auth()->user()->email)
+            ->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            })
+            ->orderByDesc('code')
+            ->paginate(7);
+        }
+        else
+        {
+            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            })
+            ->orderByDesc('code')
+            ->paginate(7);
+        }
+        $calendars = Calendar::get();
+        $lastCalendar = Calendar::orderByDesc('year')->orderByDesc('period')->first();
+        $notLastCalendar = 1;
+        if($calendar == $lastCalendar)
+        {
+            $notLastCalendar = 0;
+        }
+        return view('reservation.index', compact('reservations', 'calendars', 'notLastCalendar'));
+    }
+
+    public function import($code)
+    {
+        $calendar = Calendar::orderByDesc('year')->orderByDesc('period')->first();
+        $reservation = $this->model->where('code', $code)->first();
+        $newReservationData = [
+            'room_code' => $reservation->room_code,
+            'acronym' => $reservation->acronym,
+            'class' => $reservation->class,
+            'description' => $reservation->description,
+            'observation' => $reservation->observation,
+            'responsible' => $reservation->responsible,
+            'startTime' => $reservation->startTime,
+            'endTime' => $reservation->endTime,
+            'status' => $reservation->status,
+            'user_email' => $reservation->user_email,
+        ];
+        $roomCode = $reservation->room_code;
+        $startTime = $reservation->startTime;
+        $endTime = $reservation->endTime;
+
+        $helperStartDate = Carbon::parse($calendar->startSemester);
+        $endDate = $calendar->endSemester;
+        $days = [
+            'Segunda-Feira' => 'Monday',
+            'Terca-Feira' => 'Tuesday',
+            'Quarta-Feira' => 'Wednesday',
+            'Quinta-Feira' => 'Thursday',
+            'Sexta-Feira' => 'Friday',
+            'Sabado' => 'Saturday',
+            'Domingo' => 'Sunday',
+        ];
+        $weekDay = Carbon::parse($days['Segunda-Feira'])->dayOfWeek;
+
+        $numberTimes = 'Uma';
+        switch ($numberTimes) {
+            case 'Uma':
+                $checker = FALSE;
+                while ($helperStartDate->lte($endDate) and $checker != TRUE) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $checker = TRUE;
+                    }
+                    $helperStartDate->addDay();
+                }
+                $check = Reservation::where('room_code', $roomCode)
+                                            ->where('status', 1)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                if($check)
+                {
+                    return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia'])->withInput();
+                }
+                
+                break;
+            case 'Semanal':
+                while ($helperStartDate->lte($endDate)) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $check = Reservation::where('room_code', $roomCode)
+                                            ->where('status', 1)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                        if($check)
+                        {
+                            return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
+                        }
+                        $helperStartDate->addDays(6);
+                    }
+                    $helperStartDate->addDay();
+                }
+                break;
+            case 'Quinzenal':
+                while ($helperStartDate->lte($endDate)) 
+                {
+                    if ($helperStartDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $helperStartDate->format('Y-m-d');
+                        $check = Reservation::where('room_code', $roomCode)
+                                            ->where('status', 1)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
+                                                      });
+                                            })
+                                            ->exists();
+                        if($check)
+                        {
+                            return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
+                        }
+                        $helperStartDate->addDays(13);
+                    }
+                    $helperStartDate->addDay();
+                }
+                break;
+            default:
+                return redirect()->back()->withErrors(['error' => 'Selecione uma opção valida'])->withInput();
+                break;
+        }
+
+        $reservation_code = $this->model->store($newReservationData);
+        
+        $startDate = Carbon::parse($calendar->startSemester);
+        switch ($numberTimes) {
+            case 'Uma':
+                $checker = FALSE;
+                while ($startDate->lte($endDate) and $checker != TRUE) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        $checker = TRUE;
+                    }
+                    $startDate->addDay();
+                }
+                
+                DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                break;
+            case 'Semanal':
+                while ($startDate->lte($endDate)) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                        $startDate->addDays(6);
+                    }
+                    $startDate->addDay();
+                }
+                break;
+            case 'Quinzenal':
+                
+                while ($startDate->lte($endDate)) 
+                {
+                    if ($startDate->dayOfWeek === $weekDay) 
+                    {
+                        $date = $startDate->format('Y-m-d');
+                        DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                        $startDate->addDays(13);
+                    }
+                    $startDate->addDay();
+                }
+                break;
+            default:
+                return redirect()->back()->withErrors(['error' => 'Selecione uma opção valida'])->withInput();
+                break;
+        }
+        return redirect()->back()->withErrors(['error' => 'Importado com sucesso']);
     }
 
     public function create(Request $request)
@@ -402,7 +603,8 @@ class ReservationController extends Controller
                                                       });
                                             })
                                             ->where('status', 1)
-                                            ->exists();
+                                            ->first();
+                
                         if($check && $check!=$reservation)
                         {
                             return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();
@@ -427,7 +629,7 @@ class ReservationController extends Controller
                                                       });
                                             })
                                             ->where('status', 1)
-                                            ->exists();
+                                            ->first();
                         if($check && $check!=$reservation)
                         {
                             return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia durante o periodo desejado'])->withInput();

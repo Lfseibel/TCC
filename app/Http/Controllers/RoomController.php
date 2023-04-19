@@ -19,7 +19,7 @@ class RoomController extends Controller
 
     public function index(Request $request)
     {
-        $rooms = $this->model->where('code', 'LIKE', "%{$request->search}%")->get();
+        $rooms = $this->model->where('code', 'LIKE', "%{$request->search}%")->paginate(7);
         return view('room.index', compact('rooms'));
     }
 

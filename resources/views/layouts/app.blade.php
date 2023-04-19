@@ -27,6 +27,7 @@
     },
     }
   </script>
+  @yield('script')
 </head>
 <body class="bg-gray-50">
   <header class="bg-unifei-800 text-unifei-50 w-screen">

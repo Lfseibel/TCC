@@ -17,7 +17,7 @@ class UnityController extends Controller
 
     public function index(Request $request)
     {
-        $unities = $this->model->where('code', 'LIKE', "%{$request->search}%")->get();
+        $unities = $this->model->where('code', 'LIKE', "%{$request->search}%")->paginate(7);
         return view('unity.index', compact('unities'));
     }
 

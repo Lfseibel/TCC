@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('script')
+<script src="{{asset("./js/reservation.js")}}"></script>
+@endsection
+
 @section('title', 'Nova reserva')
 
 @section('content')
