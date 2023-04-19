@@ -21,6 +21,8 @@ return new class extends Migration
             $table->char('observation', 120);
             $table->char('responsible', 120);
             $table->integer('status')->default(0);
+            $table->integer('frequency');
+            $table->integer('weekday');
             $table->time('startTime');
             $table->time('endTime');
             $table->char('room_code', 10);

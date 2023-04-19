@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('unities', function (Blueprint $table) {
             $table->char('code', 8)->unique();
-            $table->char('name', 60);
+            $table->char('name', 65);
             $table->primary('code');
         });
     }

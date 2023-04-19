@@ -22,6 +22,8 @@ class Reservation extends Model
         'description',
         'observation',
         'responsible',
+        'frequency',
+        'weekday',
         'startTime',
         'endTime',
         'room_code',

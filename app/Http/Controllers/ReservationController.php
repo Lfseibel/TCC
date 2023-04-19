@@ -82,6 +82,8 @@ class ReservationController extends Controller
             'description' => $reservation->description,
             'observation' => $reservation->observation,
             'responsible' => $reservation->responsible,
+            'frequency' => $reservation->frequency,
+            'weekday' => $reservation->weekday,
             'startTime' => $reservation->startTime,
             'endTime' => $reservation->endTime,
             'status' => $reservation->status,
@@ -295,7 +297,7 @@ class ReservationController extends Controller
         $roomCode = $request->input('room_code');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
-        $numberTimes =  $request->input('times');
+        $numberTimes =  $request->input('frequency');
         $days = [
             'Segunda-Feira' => 'Monday',
             'Terca-Feira' => 'Tuesday',
@@ -305,6 +307,8 @@ class ReservationController extends Controller
             'Sabado' => 'Saturday',
             'Domingo' => 'Sunday',
         ];
+       
+
         $weekDay = Carbon::parse($days[$request->input('weekday')])->dayOfWeek;
 
         $helperStartDate = Carbon::parse($request->input('startDate'));
@@ -409,8 +413,15 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
             }
         }
+
+        $times = [
+            'Uma' => 0,
+            'Semanal' => 1,
+            'Quinzenal' => 2,
+        ];
         $data = $request->merge(['user_email' => auth()->user()->email])->all();
-       
+        $data['frequency'] = $times[$request->input('frequency')];
+        $data['weekday'] = $weekDay;
         $reservation_code = $this->model->store($data);
 
         $startDate = Carbon::parse($request->input('startDate'));
@@ -468,7 +479,7 @@ class ReservationController extends Controller
         {
             return redirect()->route('reservation.index');
         }
-        
+        $dates = [];
         foreach ($reservation->reservationDates as $date) {
             foreach ($date->getAttributes() as $key => $value) {
                 if ($key === 'date') {
@@ -546,7 +557,7 @@ class ReservationController extends Controller
         $roomCode = $request->input('room_code');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
-        $numberTimes =  $request->input('times');
+        $numberTimes =  $request->input('frequency');
         $days = [
             'Segunda-Feira' => 'Monday',
             'Terca-Feira' => 'Tuesday',
@@ -765,5 +776,18 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return redirect()->route('reservation.index');
+    }
+
+    public function destroyDate($code, $date)
+    {
+        if(!$reservation = $this->model->find($code))
+        {
+            return redirect()->route('reservation.index');
+        }
+        
+        ReservationDate::where('reservation_code', $code)->where('date', $date)->delete();
+      
+
+        return redirect()->back();
     }
 }

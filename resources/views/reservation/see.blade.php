@@ -2,6 +2,10 @@
 
 @section('title', 'Visualizar reserva ')
 
+@section('script')
+<script src="{{asset("./js/reservation.js")}}"></script>
+@endsection
+
 @section('content')
 @include('includes.validation-form')
 <div class="flex items-center justify-center my-8">
@@ -25,12 +29,26 @@
     <label>Hora de fim</label>
     <input type="time" name="endTime" placeholder="Horario fim:" value="{{ $reservation->endTime }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" disabled>
     
+    
+    @if ($dates)
     <h2>Dias reservados:</h2>
     @foreach ($dates as $date)
-      
-      <input type="date" value="{{ $date }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" disabled>
-    
-    @endforeach
+    <div class="flex items-center ">
+    <input type="date" value="{{ $date }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" disabled>
+    <form id="{{$date}}" action="{{ route('reservationdate.destroy', [$reservation->code,$date]) }}" method="POST">
+      @method('DELETE')
+      @csrf
+      <button type="button" onclick="teste()" class="rounded-full bg-red-500 hover:bg-red-700 text-white "><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      </button>
+    </form>
+  </div>
+  @endforeach
+  @else
+  <h2>Nenhum dia reservado</h2>
+    @endif
+   
 
     @if (auth()->user()->type === 'Admin' && !$reservation->status)
       <form action="{{ route('reservation.verify', $reservation->code) }}" method="POST">

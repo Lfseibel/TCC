@@ -9,11 +9,11 @@
     @endif
     <option value="{{ old('room_code') ?? $reservation->room_code ?? $room_code ?? NULL }}" selected>{{old('room_code') ?? $reservation->room_code ?? $room_code ??'Escolha a Sala'}} </option>
   </select>
-<select  name="times" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
+<select  name="frequency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2">
   <option value="Uma">Uma</option>
   <option value="Semanal">Semanal</option>
   <option value="Quinzenal">Quinzenal</option>
-  <option value="{{ old('times') ?? NULL }}" selected>{{ old('times') ??'Escolha a quantidade de vezes'}} </option>
+  <option value="{{ old('frequency') ?? $reservation->frequency ?? NULL }}" selected>{{ old('frequency') ??'Escolha a quantidade de vezes'}} </option>
 </select>
 
 <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="weekday">
@@ -24,7 +24,7 @@
   <option value="Sexta-Feira">Sexta-Feira</option>
   <option value="Sabado">Sabado</option>
   <option value="Domingo">Domingo</option>
-  <option value="{{ old('weekday') ?? NULL }}" selected>{{ old('weekday') ??'Escolha o dia da semana'}} </option>
+  <option value="{{ old('weekday') ?? $reservation->weekday ?? NULL }}" selected>{{ old('weekday') ??'Escolha o dia da semana'}} </option>
 </select>
   <input type="text" name="acronym" placeholder="Sigla:" value="{{ old('acronym') ?? $reservation->acronym ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <input type="text" name="class" placeholder="Turma:" value="{{ old('class') ?? $reservation->class ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">

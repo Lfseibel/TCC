@@ -26,5 +26,6 @@ function showInputs() {
 }
 
 function teste() {
+    let form = document.querySelector("#your-form-id");
     alert("Erro");
 }

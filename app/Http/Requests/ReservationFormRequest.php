@@ -26,7 +26,7 @@ class ReservationFormRequest extends FormRequest
         $code = $this->code ?? '';
 
         $rules =[
-            'times' => ['required'],
+            'frequency' => ['required'],
             'weekday' => ['required'],
             'acronym' => ['nullable','min:1','max:12'], 
             'class' => ['nullable','min:1', 'max:6'],
