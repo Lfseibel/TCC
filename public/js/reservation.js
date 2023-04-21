@@ -29,3 +29,15 @@ function teste() {
     let form = document.querySelector("#your-form-id");
     alert("Erro");
 }
+
+function submitDeleteReserveDate(id) {
+    if (
+        confirm("Are you sure you want to delete this thing into the database?")
+    ) {
+        var form = document.getElementById(id);
+        form.submit();
+    } else {
+        // Do nothing!
+        alert("Nada");
+    }
+}

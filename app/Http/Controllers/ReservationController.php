@@ -37,7 +37,7 @@ class ReservationController extends Controller
         else
         {
             $today = \Illuminate\Support\Carbon::today();
-            $calendar = DB::table('calendars')->where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first();
+            $calendar = Calendar::where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first();
             $startDate = $calendar->startSemester;
             $endDate = $calendar->endSemester;
         }
@@ -66,6 +66,7 @@ class ReservationController extends Controller
         $notLastCalendar = 1;
         if($calendar == $lastCalendar)
         {
+            
             $notLastCalendar = 0;
         }
         return view('reservation.index', compact('reservations', 'calendars', 'notLastCalendar'));
@@ -94,6 +95,7 @@ class ReservationController extends Controller
         $endTime = $reservation->endTime;
 
         $helperStartDate = Carbon::parse($calendar->startSemester);
+
         $endDate = $calendar->endSemester;
         $days = [
             'Segunda-Feira' => 'Monday',
@@ -104,9 +106,15 @@ class ReservationController extends Controller
             'Sabado' => 'Saturday',
             'Domingo' => 'Sunday',
         ];
-        $weekDay = Carbon::parse($days['Segunda-Feira'])->dayOfWeek;
+        $weekDay = Carbon::now()->startOfWeek()->addDays($newReservationData['weekday'] - 1)->dayOfWeek;
+        $times = [
+            0 => 'Uma',
+            1 => 'Semanal',
+            2 => 'Quinzenal'
+        ];
 
-        $numberTimes = 'Uma';
+        $numberTimes = $times[$newReservationData['frequency']];
+        
         switch ($numberTimes) {
             case 'Uma':
                 $checker = FALSE;
@@ -114,12 +122,9 @@ class ReservationController extends Controller
                 {
                     if ($helperStartDate->dayOfWeek === $weekDay) 
                     {
-                        $date = $helperStartDate->format('Y-m-d');
                         $checker = TRUE;
-                    }
-                    $helperStartDate->addDay();
-                }
-                $check = Reservation::where('room_code', $roomCode)
+                        $date = $helperStartDate->format('Y-m-d');
+                        $check = Reservation::where('room_code', $roomCode)
                                             ->where('status', 1)
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
                                                 $query->where('date', $date)
@@ -129,10 +134,16 @@ class ReservationController extends Controller
                                                       });
                                             })
                                             ->exists();
-                if($check)
-                {
-                    return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia'])->withInput();
+                        if($check)
+                        {
+                            return redirect()->back()->withErrors(['error' => 'Já existe uma reserva aprovada neste horario/dia'])->withInput();
+                        }
+                    }
+
+                    $helperStartDate->addDay();
                 }
+                
+                
                 
                 break;
             case 'Semanal':
