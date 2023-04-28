@@ -25,19 +25,25 @@ function showInputs() {
     }
 }
 
-function teste() {
-    let form = document.querySelector("#your-form-id");
-    alert("Erro");
+function submitDeleteReservation(id) {
+    Swal.fire({
+        title: 'Voce quer deletar a reserva?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var form = document.getElementById(id);
+          form.submit();
+        }
+      })
 }
 
 function submitDeleteReserveDate(id) {
-    if (
-        confirm("Are you sure you want to delete this thing into the database?")
-    ) {
+    if (confirm("Tem certeza que deseja apagar a reserva no dia " + id)) {
         var form = document.getElementById(id);
         form.submit();
     } else {
-        // Do nothing!
-        alert("Nada");
+        console.error("Form element not found");
     }
 }

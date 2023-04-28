@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Calendarios')
-
+@section('script')
+<link href="
+{{asset("./css/sweetalert.css")}}
+" rel="stylesheet">
+<script src="{{asset("./js/sweetalert.js")}}"></script>
+<script src="{{asset("./js/calendar.js")}}"></script>
+@endsection
 @section('content')
 
 <article class="flex items-center justify-center flex-col mt-8">
