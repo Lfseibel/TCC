@@ -2,6 +2,14 @@
 
 @section('title', 'Unidades')
 
+@section('script')
+<link href="
+{{asset("./css/sweetalert.css")}}
+" rel="stylesheet">
+<script src="{{asset("./js/sweetalert.js")}}"></script>
+<script src="{{asset("./js/unidade.js")}}"></script>
+@endsection
+
 @section('content')
 
 <article class="flex items-center justify-center flex-col mt-8">
@@ -57,10 +65,10 @@
                 <a href="{{ route('unity.edit', $unity->code) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form action="{{ route('unity.destroy', $unity->code) }}" method="POST">
+              <form id="{{$unity->code}}" action="{{ route('unity.destroy', $unity->code) }}" method="POST">
                 @method('DELETE')
                 @csrf
-                <button type="submit" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+                <button type="button" onclick="deletarUnidade('{{$unity->code}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
               </form>
             </td>
         </tr>

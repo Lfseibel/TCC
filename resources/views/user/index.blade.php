@@ -2,6 +2,15 @@
 
 @section('title', 'Usuarios')
 
+@section('script')
+<link href="
+{{asset("./css/sweetalert.css")}}
+" rel="stylesheet">
+<script src="{{asset("./js/sweetalert.js")}}"></script>
+<script src="{{asset("./js/usuario.js")}}"></script>
+@endsection
+
+
 @section('content')
 
 
@@ -58,10 +67,10 @@
               <a href="{{ route('user.edit', $user->email) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
           </td>
           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-            <form action="{{ route('user.destroy', $user->email) }}" method="POST">
+            <form id="{{$user->email}}" action="{{ route('user.destroy', $user->email) }}" method="POST">
               @method('DELETE')
               @csrf
-              <button type="submit" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+              <button type="button" onclick="deletarUsuario('{{$user->email}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
             </form>
           </td>
       </tr>

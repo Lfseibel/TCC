@@ -3,7 +3,11 @@
 @section('title', 'Blocos')
 
 @section('script')
-<script src="{{asset("./js/block.js")}}"></script>
+<link href="
+{{asset("./css/sweetalert.css")}}
+" rel="stylesheet">
+<script src="{{asset("./js/sweetalert.js")}}"></script>
+<script src="{{asset("./js/bloco.js")}}"></script>
 @endsection
 
 @section('content')

@@ -6,7 +6,7 @@
 {{asset("./css/sweetalert.css")}}
 " rel="stylesheet">
 <script src="{{asset("./js/sweetalert.js")}}"></script>
-<script src="{{asset("./js/calendar.js")}}"></script>
+<script src="{{asset("./js/calendario.js")}}"></script>
 @endsection
 @section('content')
 
@@ -71,10 +71,10 @@
                 <a href="{{ route('calendar.edit', [$calendar->year,$calendar->period]) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form action="{{ route('calendar.destroy', [$calendar->year,$calendar->period]) }}" method="POST">
+              <form id="{{$calendar->year}},{{$calendar->period}}" action="{{ route('calendar.destroy', [$calendar->year,$calendar->period]) }}" method="POST">
                 @method('DELETE')
                 @csrf
-                <button type="submit" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+                <button type="button" onclick="deletarCalendario('{{$calendar->year}},{{$calendar->period}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
               </form>
             </td>
         </tr>

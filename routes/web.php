@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function(){
     });
 
     Route::get('/see/{code}/reservation', [ReservationController::class, 'see'])->name('reservation.see');
+    Route::get('/room/reservations/{code}', [RoomController::class, 'reservations'])->name('room.reservations');
 
     Route::middleware('admin')->group(function(){
         Route::delete('/reservationDate/{code}/{date}', [ReservationController::class, 'destroyDate'])->name('reservationdate.destroy');

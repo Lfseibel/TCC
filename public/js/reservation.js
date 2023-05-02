@@ -40,10 +40,16 @@ function submitDeleteReservation(id) {
 }
 
 function submitDeleteReserveDate(id) {
-    if (confirm("Tem certeza que deseja apagar a reserva no dia " + id)) {
-        var form = document.getElementById(id);
-        form.submit();
-    } else {
-        console.error("Form element not found");
-    }
+    let parts = id.split("-");
+    Swal.fire({
+        title: "Tem certeza que deseja apagar a reserva no dia " + parts[2] + "-" + parts[1] + "-" + parts[0]+"?",
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var form = document.getElementById(id);
+          form.submit();
+        }
+      })
 }
