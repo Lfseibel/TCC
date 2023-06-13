@@ -54,7 +54,7 @@
   <tbody>
     @foreach ($results as $roomCode => $reserved)
       <tr>
-                <td class="text-center px-5 py-5 border-b border-gray-200 bg-white text-sm border-r-4">{{ $roomCode }}</td>
+                <td class="text-center px-5 py-5 border-b border-gray-200 bg-white text-sm border-r-4"><a href="{{route('room.reservations',  $roomCode) }}">{{ $roomCode }}</a></td>
                 @foreach ($reserved as $key => $reservation)
                     <td class="text-center px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       @if ($reservation && $reservation['reserved']==2 && $reservation['acronym'])

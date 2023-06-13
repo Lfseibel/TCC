@@ -39,6 +39,7 @@
     @foreach ($dates as $date)
     <div class="flex items-center ">
     <input type="date" value="{{ $date }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2" disabled>
+    @if (auth()->user()->type === 'Admin')
     <form id="{{$date}}" action="{{ route('reservationdate.destroy', [$reservation->code,$date]) }}" method="POST">
       @method('DELETE')
       @csrf
@@ -47,6 +48,8 @@
       </svg>
       </button>
     </form>
+    @endif
+    
   </div>
   @endforeach
   @else

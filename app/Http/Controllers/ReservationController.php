@@ -55,18 +55,19 @@ class ReservationController extends Controller
         }
         else
         {
-            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
+            $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")
+            ->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
             ->orderByDesc('code')
             ->paginate(7);
+            
         }
         $calendars = Calendar::get();
         $lastCalendar = Calendar::orderByDesc('year')->orderByDesc('period')->first();
         $notLastCalendar = 1;
         if($calendar == $lastCalendar)
         {
-            
             $notLastCalendar = 0;
         }
         return view('reservation.index', compact('reservations', 'calendars', 'notLastCalendar'));
@@ -525,14 +526,41 @@ class ReservationController extends Controller
         $room_code = NULL;
         $startTime = NULL;
         $endTime = NULL;
-        $firstDate = $reservation->reservationDates()->first();
-        $getter = $firstDate->getAttributes();
-        $startDate = $getter['date'];
+        if($reservation->reservationDates()->first())
+        {
+            $firstDate = $reservation->reservationDates()->first();
+            $getter = $firstDate->getAttributes();
+            $startDate = $getter['date'];
+            $calendar = DB::table('calendars')->where('startSemester', '<=', $startDate)->where('endSemester', '>=', $startDate)->first();
+            $endSemester = $calendar->endSemester;
+        }
+        else
+        {
+            $startDate = Carbon::today()->toDateString();
+            $calendar = DB::table('calendars')->where('startSemester', '<=', $startDate)->where('endSemester', '>=', $startDate)->first();
+            $endSemester = $calendar->endSemester;
+        }
+        
 
+        $dias = [
+            1 => 'Segunda-Feira',
+            2 => 'Terca-Feira',
+            3 => 'Quarta-Feira',
+            4 => 'Quinta-Feira',
+            5 => 'Sexta-Feira',
+            6 => 'Sabado',
+            7 => 'Domingo',
+        ];
+
+        $frequencia = [
+            0 => 'Uma',
+            1 => 'Semanal',
+            2 => 'Quinzenal',
+        ];
         
+        $reservation->weekday = $dias[$reservation->weekday];
+        $reservation->frequency = $frequencia[$reservation->frequency];
         
-        $calendar = DB::table('calendars')->where('startSemester', '<=', $startDate)->where('endSemester', '>=', $startDate)->first();
-        $endSemester = $calendar->endSemester;
         return view('reservation.edit', compact('rooms', 'reservation', 'room_code','startTime', 'endTime', 'startDate', 'endSemester'));
     }
 
@@ -677,7 +705,15 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(['error' => "Sala ainda não liberada pra reserva no periodo atual, somente apos o dia $calendar->limitDate"])->withInput();
             }
         }
+
+        $times = [
+            'Uma' => 0,
+            'Semanal' => 1,
+            'Quinzenal' => 2,
+        ];
         $data = $request->merge(['user_email' => $reservation->user_email])->all();
+        $data['frequency'] = $times[$request->input('frequency')];
+        $data['weekday'] = $weekDay;
         $reservation->update($data);
 
         $startDate = Carbon::parse($request->input('startDate'));
@@ -795,9 +831,13 @@ class ReservationController extends Controller
         {
             return redirect()->route('reservation.index');
         }
-        
         ReservationDate::where('reservation_code', $code)->where('date', $date)->delete();
-      
+
+        if(!ReservationDate::where('reservation_code', $code)->first())
+        {
+            $reservation->delete();
+            return redirect()->route('reservation.index');
+        }
 
         return redirect()->back();
     }

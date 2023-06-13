@@ -30,6 +30,12 @@ class CalendarController extends Controller
 
     public function store(CalendarFormRequest $request)
     {
+        if($calendar = DB::table('calendars')->where('startSemester', '<=', $request->startSemester)->where('endSemester', '>=', $request->endSemester)->first())
+        {
+            $errors = new \Illuminate\Support\MessageBag(['Já existe um calendario que engloba algum dia desse período']);
+            return redirect()->back()->with('errors', $errors)->withInput();
+        }
+
         try {
             $this->model->store($request->all());
         } catch (PDOException $exception) {
