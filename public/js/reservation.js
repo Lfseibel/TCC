@@ -1,55 +1,72 @@
-function showInputs() {
-    var selectValue = document.getElementById("mySelect").value;
-    var inputsDiv = document.getElementById("inputs");
-    var input1 = document.getElementById("input1");
-    var input2 = document.getElementById("input2");
-    var input3 = document.getElementById("input3");
-
-    if (selectValue === "option1") {
-        inputsDiv.style.display = "block";
-        input1.style.display = "block";
-        input2.style.display = "none";
-        input3.style.display = "none";
-    } else if (selectValue === "option2") {
-        inputsDiv.style.display = "block";
-        input1.style.display = "block";
-        input2.style.display = "block";
-        input3.style.display = "none";
-    } else if (selectValue === "option3") {
-        inputsDiv.style.display = "block";
-        input1.style.display = "block";
-        input2.style.display = "block";
-        input3.style.display = "block";
-    } else {
-        inputsDiv.style.display = "none";
-    }
-}
-
-function submitDeleteReservation(id) {
-    Swal.fire({
+document.addEventListener('DOMContentLoaded', function() {
+  let deleteButtons = document.querySelectorAll('.delete-reservation');
+  deleteButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      let form = button.closest('form');
+      let id = form.id;
+      Swal.fire({
         title: 'Voce quer deletar a reserva?',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
       }).then((result) => {
         if (result.isConfirmed) {
-          var form = document.getElementById(id);
           form.submit();
         }
-      })
-}
+      });
+    });
+  });
+});
 
-function submitDeleteReserveDate(id) {
-    let parts = id.split("-");
-    Swal.fire({
-        title: "Tem certeza que deseja apagar a reserva no dia " + parts[2] + "-" + parts[1] + "-" + parts[0]+"?",
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        denyButtonText: 'No',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          var form = document.getElementById(id);
-          form.submit();
-        }
-      })
-}
+document.addEventListener('DOMContentLoaded', function() {
+  let deleteButtons = document.querySelectorAll('.delete-button');
+  deleteButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      let form = button.closest('form');
+      let id = form.id;
+      let parts = id.split("-");
+
+      let allForms = document.querySelectorAll('.delete-button');
+      if (allForms.length === 1) {
+        Swal.fire({
+          title: "Tem certeza que deseja apagar a reserva no dia " + parts[2] + "-" + parts[1] + "-" + parts[0] + "? A reserva inteira será deletada caso você prossiga",
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          denyButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      } 
+      else 
+      {
+        Swal.fire({
+          title: "Tem certeza que deseja apagar a reserva no dia " + parts[2] + "-" + parts[1] + "-" + parts[0] + "?",
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          denyButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      }
+    });
+  });
+});
+
+// function submitDeleteReserveDate(id) {
+//     let parts = id.split("-");
+//     Swal.fire({
+//         title: "Tem certeza que deseja apagar a reserva no dia " + parts[2] + "-" + parts[1] + "-" + parts[0]+"?",
+//         showCancelButton: true,
+//         confirmButtonText: 'Yes',
+//         denyButtonText: 'No',
+//       }).then((result) => {
+//         if (result.isConfirmed) {
+//           var form = document.getElementById(id);
+//           form.submit();
+//         }
+//       })
+// }

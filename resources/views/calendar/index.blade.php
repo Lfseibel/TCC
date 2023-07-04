@@ -74,7 +74,7 @@
               <form id="{{$calendar->year}},{{$calendar->period}}" action="{{ route('calendar.destroy', [$calendar->year,$calendar->period]) }}" method="POST">
                 @method('DELETE')
                 @csrf
-                <button type="button" onclick="deletarCalendario('{{$calendar->year}},{{$calendar->period}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+                <button type="button" class="delete-button rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
               </form>
             </td>
         </tr>

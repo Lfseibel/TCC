@@ -70,7 +70,7 @@
             <form id="{{$user->email}}" action="{{ route('user.destroy', $user->email) }}" method="POST">
               @method('DELETE')
               @csrf
-              <button type="button" onclick="deletarUsuario('{{$user->email}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+              <button type="button" class="delete-button rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
             </form>
           </td>
       </tr>

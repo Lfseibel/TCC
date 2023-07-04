@@ -78,7 +78,7 @@
               <form id="{{$schedule->code}}" action="{{ route('schedule.destroy', $schedule->code) }}" method="POST">
                 @method('DELETE')
                 @csrf
-                <button type="button" onclick="deletarHorario('{{$schedule->code}}')" class="rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
+                <button type="button" class="delete-button rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
               </form>
             </td>
         </tr>
