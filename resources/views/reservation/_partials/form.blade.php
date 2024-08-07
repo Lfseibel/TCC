@@ -1,4 +1,5 @@
 <div class="flex items-center justify-center">
+
 <div class="w-1/2 bg-white shadow-md rounded px-8 py-12">
   @csrf
   <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-unifei-500 focus:border-unifei-500 block w-full p-2.5 my-2" name="room_code">
@@ -24,7 +25,7 @@
   <option value="Sexta-Feira">Sexta-Feira</option>
   <option value="Sabado">Sabado</option>
   <option value="Domingo">Domingo</option>
-  <option value="{{ old('weekday') ?? $reservation->weekday ?? NULL }}" selected>{{ old('weekday') ?? $reservation->weekday ??'Escolha o dia da semana'}} </option>
+  <option value="{{ old('weekday') ?? $reservation->weekday ?? $weekday ?? NULL }}" selected>{{ old('weekday') ?? $reservation->weekday ?? $weekday ?? 'Escolha o dia da semana'}} </option>
 </select>
   <input type="text" name="acronym" placeholder="Sigla:" value="{{ old('acronym') ?? $reservation->acronym ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">
   <input type="text" name="class" placeholder="Turma:" value="{{ old('class') ?? $reservation->class ?? NULL}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-2">

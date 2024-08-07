@@ -12,7 +12,7 @@
 
 
 @section('content')
-
+@include('includes.validation-form')
 
 <article class="flex items-center justify-center flex-col mt-8">
   <div class="flex mb-8">

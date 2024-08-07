@@ -30,14 +30,20 @@ class ReservationController extends Controller
             $parts = explode('.', $request->input('calendar'));
             $year = (int)$parts[0];
             $period = (int)$parts[1];
-            $calendar = Calendar::where('year', $year)->where('period', $period)->first();
+            if(!$calendar = Calendar::where('year', $year)->where('period', $period)->first())
+            {
+                return redirect()->back()->withErrors(['error' => 'Não existe esse calendário']);
+            };
             $startDate = $calendar->startSemester;
             $endDate = $calendar->endSemester;
         }
         else
         {
             $today = \Illuminate\Support\Carbon::today();
-            $calendar = Calendar::where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first();
+            if(!$calendar = Calendar::where('startSemester', '<=', $today)->where('endSemester', '>=', $today)->first())
+            {
+                return redirect()->back()->withErrors(['error' => 'Não existe um calendário aberto']);
+            };
             $startDate = $calendar->startSemester;
             $endDate = $calendar->endSemester;
         }
@@ -47,6 +53,8 @@ class ReservationController extends Controller
             $reservations = $this->model
             ->where('status', 'LIKE', "%{$request->input('status')}%")
             ->where('user_email', '=', auth()->user()->email)
+            ->where('acronym', 'LIKE', "%{$request->input('acronym')}%")
+            ->where('responsible', 'LIKE', "%{$request->input('responsible')}%")
             ->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
@@ -56,6 +64,8 @@ class ReservationController extends Controller
         else
         {
             $reservations = $this->model->where('status', 'LIKE', "%{$request->input('status')}%")
+            ->where('acronym', 'LIKE', "%{$request->input('acronym')}%")
+            ->where('responsible', 'LIKE', "%{$request->input('responsible')}%")
             ->whereHas('reservationDates', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
@@ -302,10 +312,15 @@ class ReservationController extends Controller
         {
             return redirect()->back()->withErrors(['error' => 'Não existe um calendario aberto, aguarde o administrador do sistema abrir um para realizar sua reserva'])->withInput();
         }
+
         if($startDate < $calendar->startSemester or $endDate > $calendar->endSemester)
         {
-            return redirect()->back()->withErrors(['error' => "Reserva indisponível durante as datas solicitadas, o semestre atual começa no dia $calendar->startSemester e termina no dia $calendar->endSemester"])->withInput();
+            if(!$futureCalendar = DB::table('calendars')->where('startSemester', '<=', $startDate)->where('endSemester', '>=', $endDate)->first())
+            {
+                return redirect()->back()->withErrors(['error' => "Reserva indisponível durante as datas solicitadas, o semestre atual começa no dia $calendar->startSemester e termina no dia $calendar->endSemester e não existe nenhum outro semestre com essas datas"])->withInput();
+            }
         }
+        
         $roomCode = $request->input('room_code');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
@@ -327,6 +342,7 @@ class ReservationController extends Controller
         //verificar se existe reserva na sala durante o periodo solicitado
         switch ($numberTimes) {
             case 'Uma':
+               
                 $checker = FALSE;
                 while ($helperStartDate->lte($endDate) and $checker != TRUE) 
                 {
@@ -337,6 +353,7 @@ class ReservationController extends Controller
                     }
                     $helperStartDate->addDay();
                 }
+                
                 $check = Reservation::where('room_code', $roomCode)
                                             ->where('status', 1)
                                             ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
@@ -449,8 +466,7 @@ class ReservationController extends Controller
                     }
                     $startDate->addDay();
                 }
-                
-                DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
+                $verify = DB::insert('insert into reservation_dates (date, reservation_code) values (?, ?)', [$date, $reservation_code->code]);
                 break;
             case 'Semanal':
                 while ($startDate->lte($endDate)) 

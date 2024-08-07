@@ -38,47 +38,36 @@ class RoomController extends Controller
     {
         $room = Room::where('code', 'LIKE', "%{$room}%")->first();
 
-        // $reservations = $room->reservations->whereNotNull('acronym')
-        // ->whereIn('frequency', [1, 2])->sortBy('weekday');
 
-        // $weekStart = Carbon::now()->startOfWeek();
-        // $weekEnd = Carbon::now()->endOfWeek();
-        // $reservations = $room->reservations()
-        //     ->whereNotNull('acronym')
-        //     ->whereIn('frequency', [1, 2])
-        //     ->whereHas('reservationDates', function ($query) use ($weekStart, $weekEnd) {
-        //         $query->whereBetween('date', [$weekStart, $weekEnd]);
-        //     })
-        //     ->get();
-            $schedules = Schedule::orderBy('startTime', 'asc')->get();
-            $startOfWeek = Carbon::parse('monday this week');
-            $endOfWeek = Carbon::parse('sunday this week');
-            $roomCode = $room->code;
-            // Loop over the days of the week
-            for ($dayOfWeek = 1; $dayOfWeek <= 7; $dayOfWeek++) {
-                $date = $startOfWeek->copy()->addDays($dayOfWeek - 1);
-                
-                $reserved = [];
-                foreach ($schedules as $key => $schedule) {
-                    $startTime = $schedule->startTime;
-                    $endTime = $schedule->endTime;
+        $schedules = Schedule::orderBy('startTime', 'asc')->get();
+        $startOfWeek = Carbon::parse('monday this week');
+        $endOfWeek = Carbon::parse('sunday this week');
+        $roomCode = $room->code;
+        // Loop over the days of the week
+        for ($dayOfWeek = 1; $dayOfWeek <= 7; $dayOfWeek++) {
+            $date = $startOfWeek->copy()->addDays($dayOfWeek - 1);
             
-                    $reservation = Reservation::where('room_code', $roomCode)
-                                                ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
-                                                    $query->where('date', $date)
-                                                          ->where(function ($query) use ($startTime, $endTime) {
-                                                            $query->where('startTime', '<', $endTime)
-                                                                  ->where('endTime', '>', $startTime);
-                                                          });
-                                                })
-                                                ->orderByDesc('status')
-                                                ->whereNotNull('acronym')
-                                                ->first();                        
-                    $reserved[$key] = $reservation ? ($reservation->status == 1 ? ['reserved' => 2, 'code' => $reservation->code, 'acronym'  => $reservation->acronym, 'class' => $reservation->class] : ['reserved' => 1, 'code' => $reservation->code]) : 0;
-                }
-            
-                $results[$dayOfWeek] = $reserved;
+            $reserved = [];
+            foreach ($schedules as $key => $schedule) {
+                $startTime = $schedule->startTime;
+                $endTime = $schedule->endTime;
+        
+                $reservation = Reservation::where('room_code', $roomCode)
+                                            ->whereHas('reservationDates', function ($query) use ($startTime, $endTime, $date) {
+                                                $query->where('date', $date)
+                                                      ->where(function ($query) use ($startTime, $endTime) {
+                                                        $query->where('startTime', '<', $endTime)
+                                                              ->where('endTime', '>', $startTime);
+                                                      });
+                                            })
+                                            ->orderByDesc('status')
+                                            ->whereNotNull('acronym')
+                                            ->first();                        
+                $reserved[$key] = $reservation ? ($reservation->status == 1 ? ['reserved' => 2, 'code' => $reservation->code, 'acronym'  => $reservation->acronym, 'class' => $reservation->class] : ['reserved' => 1, 'code' => $reservation->code]) : 0;
             }
+        
+            $results[$dayOfWeek] = $reserved;
+        }
 
        
 
@@ -110,6 +99,13 @@ class RoomController extends Controller
 
 
         return redirect()->route('room.index');
+    }
+
+    public function report($roomCode)
+    {
+        $reservations = Reservation::where('room_code', $roomCode)->get();
+             
+        return view('room.reslist', compact(['reservations', 'roomCode']));
     }
 
     public function edit($code)

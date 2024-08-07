@@ -76,9 +76,6 @@ class IndexController extends Controller
         $titleSize = $schedulesCode->count() + 1;
 
         return view('index', compact(['schedulesCode'],['schedulesTimes'],['results'],['schedules'], ['blocks'], ['unities'], ['rooms'], ['titleSize']));
-
-
-        
     }
 
     public function search(Request $request)
@@ -99,7 +96,8 @@ class IndexController extends Controller
         $capacity = $request->input('capacity');
         $block = $request->input('block');
         $unity = $request->input('unity');
-        
+        $acronym = $request->input('acronym');
+
         $rooms = Room::where('block_code', 'LIKE', "%{$block}%")
             ->when($unity, function ($query) use ($unity) {
                 return $query->whereHas('unities', function ($query) use ($unity) {
@@ -147,7 +145,5 @@ class IndexController extends Controller
 
         return view('search_index', compact(['schedulesCode'],['schedulesTimes'],['results'],['schedules'], ['blocks'], ['unities'], ['rooms'], ['titleSize']));
 
-
-        
     }
 }

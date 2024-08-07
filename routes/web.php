@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function(){
         Route::delete('/reservationDate/{code}/{date}', [ReservationController::class, 'destroyDate'])->name('reservationdate.destroy');
         Route::post('/import/reservation/{code}', [ReservationController::class, 'import'])->name('reservation.import');
         /* Room related routes */
+        Route::get('/room/reservations/report/{code}', [RoomController::class, 'report'])->name('room.report');
         Route::get('/rooms', [RoomController::class, 'index'])->name('room.index');
         Route::delete('/room/{code}', [RoomController::class, 'destroy'])->name('room.destroy');
         Route::put('/room/{code}', [RoomController::class, 'update'])->name('room.update');

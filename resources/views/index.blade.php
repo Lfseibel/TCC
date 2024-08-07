@@ -3,7 +3,7 @@
 @section('title', 'Usuarios')
 
 @section('content')
-
+@include('includes.validation-form')
 <form action="{{ route('index.search') }}" method="get" class="flex align-center justify-around my-4">
   <input type="date" name="date" placeholder="Date" value="{{request()->query('date')}}" class="md:w-1/6 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-unifei-500">
   <select class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500" name="block">

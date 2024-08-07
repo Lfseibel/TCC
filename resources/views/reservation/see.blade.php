@@ -63,6 +63,10 @@
       </form>
     @endif
     @if ($reservation->user_email == auth()->user()->email || auth()->user()->type === 'Admin')
+    <form action="{{ route('reservation.edit', $reservation->code) }}" method="GET">
+      @csrf
+      <button type="submit" class="w-full rounded-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold mt-8 py-2 px-4">Editar</button>
+    </form>
   <form id="{{$reservation->code}}" action="{{ route('reservation.destroy', $reservation->code) }}" method="POST">
     @method('DELETE')
     @csrf

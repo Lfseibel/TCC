@@ -10,13 +10,13 @@
     <h1 class="text-2xl font-semibold leading-tigh py-2 mr-48">Reservas:</h1>
     <form action="{{ route('reservation.index') }}" method="get" class="flex align-center ">
       @csrf
-      <select name="status" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-24">
+      <select name="status" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-12">
         <option value="0" >Pendente</option>
         <option value="1" >Aprovado</option>
         <option value="{{request()->query('status')}}" selected>{{request()->query('status') ?? 'Status'}}</option>
       </select>
       @if ($calendars)
-      <select name="calendar" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-24">
+      <select name="calendar" class="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:bg-white focus:border-unifei-500 mr-12">
         @foreach ($calendars as $calendar)
           <option value="{{$calendar->year.'.'.$calendar->period}}" >{{$calendar->year.'.'.$calendar->period}}</option>
         @endforeach
@@ -24,7 +24,8 @@
         <option value="{{request()->query('calendar')}}" selected>{{request()->query('calendar') ?? 'Calendario'}}</option>
       </select>
       @endif
-      
+      <input type="int" name="responsible" value="{{request()->query('responsible')}}" placeholder="Responsável" class="w-32 bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-unifei-500 mr-12">
+      <input type="int" name="acronym" value="{{request()->query('acronym')}}" placeholder="Materia" class="w-32 bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-unifei-500 mr-12">
 
       <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-24">Pesquisar</button>
     </form>
@@ -81,7 +82,7 @@
           
         </tr>
       </thead>
-      <tbody>
+    <tbody>
     @foreach ($reservations as $reservation)
         <tr>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -143,7 +144,7 @@
 
 
   <div class="py-4 flex items-center justify-center">
-    {{$reservations->appends(['status'=> request()->get('status', ''),'calendar'=> request()->get('calendar', '')])->links()}}
+    {{$reservations->appends(['status'=> request()->get('status', ''),'calendar'=> request()->get('calendar', ''),'responsible'=> request()->get('responsible', ''),'acronym'=> request()->get('acronym', '')])->links()}}
   </div>
 
 @endsection

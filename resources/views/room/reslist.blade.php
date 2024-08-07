@@ -1,88 +1,80 @@
 @extends('layouts.app')
 
-@section('title', 'Calendarios')
-@section('script')
-<link href="
-{{asset("./css/sweetalert.css")}}
-" rel="stylesheet">
-<script src="{{asset("./js/sweetalert.js")}}"></script>
-<script src="{{asset("./js/calendario.js")}}"></script>
-@endsection
+@section('title', 'Relatório-Sala')
+
 @section('content')
-@include('includes.validation-form')
+
 <article class="flex items-center justify-center flex-col mt-8">
-  <div class="flex mb-8">
-    <h1 class="text-2xl font-semibold leading-tigh py-2 mr-96">Calendarios:</h1>
-    <a href="{{ route('calendar.create') }}" class=" bg-green-200 rounded py-2 px-6">Adicionar Calendario</a>
-  </div>
-  <div class="flex flex-col">
-  
-  </div>
+  <h1 class="mb-6">Lista de reservas na sala {{$roomCode}}:</h1>
   <table class="leading-normal shadow-md rounded-lg overflow-hidden">
-    <thead>
+  <thead>
         <tr>
+          
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Ano
+            Materia
           </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Periodo
+            Responsavel
           </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Data Limite
+            Deferido
           </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Editar
+            Inicio
           </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
           >
-            Deletar
+            Fim
           </th>
+         
+  
           
         </tr>
       </thead>
-      <tbody>
-    @foreach ($calendars as $calendar)
+  <tbody>
+  
+@foreach ($reservations as $reservation)
         <tr>
+          
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               
-              {{ $calendar->year }}
+              {{ $reservation->acronym }}
                 
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               
-              {{ $calendar->period }}
+              {{ $reservation->responsible }}
                 
             </td>
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              @if ($reservation->status)
+                <p class="text-green-700">SIM</p>
+              @else
+                <p class="text-red-700">NÃO</p>
+              @endif
+              
+            </td>       
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               
-              {{ $calendar->limitDate }}
+              {{ $reservation->startTime }}
                 
-            </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <a href="{{ route('calendar.edit', [$calendar->year,$calendar->period]) }}" class="bg-yellow-200 rounded-full py-2 px-6">Editar</a>
-            </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <form id="{{$calendar->year}},{{$calendar->period}}" action="{{ route('calendar.destroy', [$calendar->year,$calendar->period]) }}" method="POST">
-                @method('DELETE')
-                @csrf
-                <button type="button" class="delete-button rounded-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">Deletar</button>
-              </form>
+            </td><td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              
+              {{ $reservation->endTime }}
+                
             </td>
         </tr>
     @endforeach
     </tbody>
   </table>
   </article>
-  <div class="py-4 flex items-center justify-center">
-    {{$calendars->appends(['status'=> request()->get('status', '')])->links()}}
-  </div>
 @endsection
